@@ -1,0 +1,7 @@
+../Core/Src/main.c:75:5:main	240	dynamic
+../Core/Src/main.c:197:6:SystemClock_Config	88	static
+../Core/Src/main.c:263:6:HAL_TIM_PeriodElapsedCallback	16	static
+../Core/Src/main.c:282:6:HAL_GPIO_EXTI_Callback	16	static
+../Core/Src/main.c:323:6:generate_ramp	48	static
+../Core/Src/main.c:354:6:ramp_set	32	static
+../Core/Src/main.c:375:6:Error_Handler	4	static,ignoring_inline_asm
