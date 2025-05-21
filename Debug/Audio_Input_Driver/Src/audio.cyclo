@@ -1,1 +1,2 @@
-../Audio_Input_Driver/Src/audio.c:55:6:filterData	3
+../Audio_Input_Driver/Src/audio.c:61:6:filterData	3
+../Audio_Input_Driver/Src/audio.c:107:6:performFFT	3

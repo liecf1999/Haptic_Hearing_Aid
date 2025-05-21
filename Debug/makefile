@@ -10,6 +10,21 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include Drivers/STM32F4xx_HAL_Driver/Src/subdir.mk
+-include Drivers/CMSIS_DSP/Source/TransformFunctions/subdir.mk
+-include Drivers/CMSIS_DSP/Source/SupportFunctions/subdir.mk
+-include Drivers/CMSIS_DSP/Source/StatisticsFunctions/subdir.mk
+-include Drivers/CMSIS_DSP/Source/SVMFunctions/subdir.mk
+-include Drivers/CMSIS_DSP/Source/QuaternionMathFunctions/subdir.mk
+-include Drivers/CMSIS_DSP/Source/MatrixFunctions/subdir.mk
+-include Drivers/CMSIS_DSP/Source/InterpolationFunctions/subdir.mk
+-include Drivers/CMSIS_DSP/Source/FilteringFunctions/subdir.mk
+-include Drivers/CMSIS_DSP/Source/FastMathFunctions/subdir.mk
+-include Drivers/CMSIS_DSP/Source/DistanceFunctions/subdir.mk
+-include Drivers/CMSIS_DSP/Source/ControllerFunctions/subdir.mk
+-include Drivers/CMSIS_DSP/Source/ComplexMathFunctions/subdir.mk
+-include Drivers/CMSIS_DSP/Source/CommonTables/subdir.mk
+-include Drivers/CMSIS_DSP/Source/BayesFunctions/subdir.mk
+-include Drivers/CMSIS_DSP/Source/BasicMathFunctions/subdir.mk
 -include Driver_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
@@ -63,7 +78,7 @@ main-build: Haptic_Hearing_Aid.elf secondary-outputs
 
 # Tool invocations
 Haptic_Hearing_Aid.elf Haptic_Hearing_Aid.map: $(OBJS) $(USER_OBJS) C:\Users\franc\STMCubeIDE_workspace\Master_Thesis\Haptic_Hearing_Aid\STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Haptic_Hearing_Aid.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\franc\STMCubeIDE_workspace\Master_Thesis\Haptic_Hearing_Aid\STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Haptic_Hearing_Aid.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "Haptic_Hearing_Aid.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\franc\STMCubeIDE_workspace\Master_Thesis\Haptic_Hearing_Aid\STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Haptic_Hearing_Aid.map" -Wl,--gc-sections -static -specs=rdimon.specs -lc -lrdimon -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

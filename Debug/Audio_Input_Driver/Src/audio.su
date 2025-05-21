@@ -1,1 +1,2 @@
-../Audio_Input_Driver/Src/audio.c:55:6:filterData	40	static
+../Audio_Input_Driver/Src/audio.c:61:6:filterData	40	static
+../Audio_Input_Driver/Src/audio.c:107:6:performFFT	48	static

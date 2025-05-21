@@ -21,7 +21,7 @@
 /*----- Header-Files -----------------------------------------------------*/
 #include "main.h"
 #include "i2c.h"
-// #include "i2s.h"
+#include "arm_math.h"
 
 /*----- Defines -----------------------------------------------------*/
 #define DEV_ADDRESS 0x57 << 1
@@ -32,6 +32,7 @@
 
 /*----- Function declarations -----------------------------------------------------*/
 void filterData(uint16_t *RawValues, int16_t *FilteredValues, uint16_t samplenumber, uint16_t Max_entry);
+void performFFT(float32_t *Result, int32_t *audiodata);
 
 
 

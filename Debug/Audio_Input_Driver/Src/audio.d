@@ -30,9 +30,41 @@ Audio_Input_Driver/Src/audio.o: ../Audio_Input_Driver/Src/audio.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sai.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sai_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- ../Core/Inc/i2c.h ../Core/Inc/main.h
+ ../Core/Inc/i2c.h ../Core/Inc/main.h \
+ ../Drivers/CMSIS_DSP/Include/arm_math.h \
+ ../Drivers/CMSIS_DSP/Include/arm_math_types.h \
+ ../Drivers/CMSIS/Include/cmsis_compiler.h \
+ ../Drivers/CMSIS_DSP/Include/arm_math_memory.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/none.h \
+ ../Drivers/CMSIS_DSP/Include/arm_math_types.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/utils.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/basic_math_functions.h \
+ ../Drivers/CMSIS_DSP/Include/arm_math_memory.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/none.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/utils.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/interpolation_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/bayes_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/statistics_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/basic_math_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/matrix_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/complex_math_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/statistics_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/controller_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/support_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/distance_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/svm_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/svm_defines.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/transform_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/complex_math_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/filtering_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/support_functions.h \
+ ../Drivers/CMSIS_DSP/Include/dsp/quaternion_math_functions.h
 ../Audio_Input_Driver/Inc/audio.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -65,7 +97,39 @@ Audio_Input_Driver/Src/audio.o: ../Audio_Input_Driver/Src/audio.c \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sai.h:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sai_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Core/Inc/i2c.h:
 ../Core/Inc/main.h:
+../Drivers/CMSIS_DSP/Include/arm_math.h:
+../Drivers/CMSIS_DSP/Include/arm_math_types.h:
+../Drivers/CMSIS/Include/cmsis_compiler.h:
+../Drivers/CMSIS_DSP/Include/arm_math_memory.h:
+../Drivers/CMSIS_DSP/Include/dsp/none.h:
+../Drivers/CMSIS_DSP/Include/arm_math_types.h:
+../Drivers/CMSIS_DSP/Include/dsp/utils.h:
+../Drivers/CMSIS_DSP/Include/dsp/basic_math_functions.h:
+../Drivers/CMSIS_DSP/Include/arm_math_memory.h:
+../Drivers/CMSIS_DSP/Include/dsp/none.h:
+../Drivers/CMSIS_DSP/Include/dsp/utils.h:
+../Drivers/CMSIS_DSP/Include/dsp/interpolation_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/bayes_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/statistics_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/basic_math_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/matrix_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/complex_math_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/statistics_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/controller_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/support_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/distance_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/svm_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/svm_defines.h:
+../Drivers/CMSIS_DSP/Include/dsp/fast_math_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/transform_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/complex_math_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/filtering_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/support_functions.h:
+../Drivers/CMSIS_DSP/Include/dsp/quaternion_math_functions.h:
