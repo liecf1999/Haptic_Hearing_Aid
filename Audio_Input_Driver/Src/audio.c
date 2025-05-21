@@ -104,11 +104,11 @@ void filterData(uint16_t *RawValues, int16_t *FilteredValues, uint16_t samplenum
  * @date		16.12.2024	FL	Created
  * 				11.03.2025	FL	Adapted
  ****************************************************************************/
-void performFFT(float32_t *Result, int32_t *audiodata){
+void performFFT(float *Result, int32_t *audiodata){
 	// 1. Fill input
 	for (int i = 0; i < FFT_SIZE; i++) {
 		// Normalize if desired: value ∈ [-131072, +131071]
-		float32_t normalized = ((float32_t) audiodata[i]) / 131072.0f;
+		float normalized = ((float) audiodata[i]) / 131072.0f;
 
 		input[2*i] = normalized;      // Real part
 		input[2*i + 1] = 0.0f;        // Imaginary part (0 for real signals)
@@ -122,8 +122,8 @@ void performFFT(float32_t *Result, int32_t *audiodata){
 
 	// 4. Compute magnitude from real and imaginary parts
 	for (int i = 0; i < FFT_SIZE; i++) {
-		float32_t real = input[2 * i];
-		float32_t imag = input[2 * i + 1];
+		float real = input[2 * i];
+		float imag = input[2 * i + 1];
 		Result[i] = sqrtf(real * real + imag * imag);
 	}
 }

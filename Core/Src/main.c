@@ -30,7 +30,7 @@
 #include "Driver_Driver.h"
 #include "math.h"
 #include <stdio.h>
-#include "audio.h"
+// #include "audio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -135,8 +135,8 @@ int main(void)
 	int32_t audioData_left[NUM_SAMPLES];
 	int32_t audioData_right[NUM_SAMPLES];
 
-	float32_t FFT_left[NUM_SAMPLES];
-	float32_t FFT_right[NUM_SAMPLES];
+	float FFT_left[NUM_SAMPLES];
+	float FFT_right[NUM_SAMPLES];
 
 
 	uint8_t drivers = 0;
@@ -270,6 +270,18 @@ int main(void)
 			  // audioData_right[i] = rawdata[2*i+1 + 2*NUM_SAMPLES];
 		  }
 		  fclose(fp);
+		  performFFT(FFT_left, audioData_left);
+		  fp = fopen("C:\\Users\\franc\\OneDrive\\Dokumente\\MATLAB\\Master_Thesis\\FFT_Left.txt", "w");
+		  for(int i=0; i<NUM_SAMPLES/2; i++){
+			  if(i<2){
+				  FFT_left[i] = 0;
+			  }
+			  int n= sprintf (p, "%f", (float) FFT_left[i]);
+			  fprintf(fp,p);
+			  fprintf(fp,"\n");
+		  }
+		  fclose(fp);
+
 
 		  // Delete lock file as signal for "done writing"
 		  remove("C:\\...\\Data_Left.lock");
