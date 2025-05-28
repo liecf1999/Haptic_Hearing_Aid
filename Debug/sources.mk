@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (12.3.rel1)
+# Toolchain: GNU Tools for STM32 (13.3.rel1)
 ################################################################################
 
 ELF_SRCS := 
@@ -26,7 +26,5 @@ Audio_Input_Driver/Src \
 Core/Src \
 Core/Startup \
 Driver_Driver/Src \
-Drivers/CMSIS_DSP/Source/CommonTables \
-Drivers/CMSIS_DSP/Source/TransformFunctions \
 Drivers/STM32F4xx_HAL_Driver/Src \
 

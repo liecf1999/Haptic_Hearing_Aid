@@ -1,2 +1,4 @@
-../Audio_Input_Driver/Src/audio.c:61:6:filterData	40	static
-../Audio_Input_Driver/Src/audio.c:107:6:performFFT	48	static
+../Audio_Input_Driver/Src/audio.c:68:6:performFFT	40	static
+../Audio_Input_Driver/Src/audio.c:107:6:process_signal	40	static
+../Audio_Input_Driver/Src/audio.c:145:7:mean	40	static
+../Audio_Input_Driver/Src/audio.c:174:6:sortvalues	48	static

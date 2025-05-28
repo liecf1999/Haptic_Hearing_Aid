@@ -30,6 +30,7 @@
 #include "Driver_Driver.h"
 #include "math.h"
 #include <stdio.h>
+#include "audio.h"
 // #include "audio.h"
 /* USER CODE END Includes */
 
@@ -60,6 +61,8 @@ FlagStatus Data_Arrived = RESET;
 #define NUM_SAMPLES 512 // leads to 32ms
 #define DMA_BUFFER_SIZE 2048 // = 4*NUM_SAMPLES (left right, and stops at half)
 
+#define NUM_FREQ_BANDS 8 // Number of frequency bands
+
 uint32_t rawdata[DMA_BUFFER_SIZE] = {0};
 
 double t_sample = 0.0003; // 300us
@@ -74,6 +77,8 @@ void SystemClock_Config(void);
 void generate_ramp(double *ramp, uint8_t maxvalue, uint8_t numValues);
 void ramp_set(double *ramp, double *amplitudes, uint8_t counter, uint8_t numvalues);
 extern void initialise_monitor_handles(void);
+void DWT_Init(void);
+void delay_us(uint32_t us);
 
 int __io_putchar(int ch) {
     return fputc(ch, stdout); // Semihosting handles this
@@ -123,7 +128,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
 
-	// init_drivers();
+ init_drivers();
+ DWT_Init();
 
 	uint8_t numValues = 80;
 	double ramp[numValues];
@@ -135,12 +141,9 @@ int main(void)
 	int32_t audioData_left[NUM_SAMPLES];
 	int32_t audioData_right[NUM_SAMPLES];
 
-	float FFT_left[NUM_SAMPLES];
-	float FFT_right[NUM_SAMPLES];
 
-
-	uint8_t drivers = 0;
-	uint8_t firstround = 0;
+//	uint8_t drivers = 0;
+//	uint8_t firstround = 0;
 
 	uint8_t ready = 0;
 
@@ -159,10 +162,8 @@ int main(void)
 	p = s;
 
 
-	HAL_NVIC_EnableIRQ(TIM7_IRQn);
-	HAL_TIM_Base_Start_IT(&htim7);
-
-	// HAL_I2S_Receive_DMA(&hi2s1, (uint16_t *) rawdata, DMA_BUFFER_SIZE);
+//	HAL_NVIC_EnableIRQ(TIM7_IRQn);
+//	HAL_TIM_Base_Start_IT(&htim7);
 
 	HAL_SAI_Receive_DMA(&hsai_BlockA1, (uint32_t*)rawdata, DMA_BUFFER_SIZE);
 
@@ -201,11 +202,14 @@ int main(void)
 		  ready = 0;
 		  // clear actual waveform with rising edge
 		  HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, RESET);
+//		  delay_us(100);
 		  HAL_Delay(1);
 		  HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, SET);
+//		  delay_us(100);
 		  HAL_Delay(5);
 		  // set new waveform with rising edge
 		  HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, RESET);
+//		  delay_us(100);
 		  HAL_Delay(1);
 		  HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, SET);
 	  }
@@ -215,6 +219,7 @@ int main(void)
 	  }
 	  if(Data_Arrived_First_Half){
 		  Data_Arrived_First_Half = RESET;
+		  HAL_TIM_Base_Start(&htim7);
 		  // Create lock file to have no conflicts with matlab
 		  FILE* lock = fopen("C:\\...\\Data_Left.lock", "w");
 		  if (lock) fclose(lock);  // just create and close
@@ -223,29 +228,22 @@ int main(void)
 		  for(int i=0; i<NUM_SAMPLES; i++){
 			  // value is stored in four array parts (LSB left, MSB left, LSB right, MSB right)
 			  // Sort it and value is 18-bit (MSB) in 2's complement
-			  // audioData_left[i] = (int32_t)(rawdata[4*i+1] << 16) | rawdata[4*i];
-			 // audioData_left[i] = rawdata[2*i]; // without shifting
 			  audioData_left[i] = ((int32_t)(rawdata[2*i] << 0)) >> 14;
 			  audioData_right[i] = ((int32_t)(rawdata[2*i+1] << 0)) >> 14;
-			  // audioData_right[i] = rawdata[2*i+1];
 			  int n= sprintf (p, "%d", (int) audioData_left[i]);
 			  fprintf(fp,p);
 			  fprintf(fp,"\n");
-			 //  audioData_right[i] = (int32_t)(rawdata[4*i+3] << 16) | rawdata[4*i+2];
-		  }
-		  fclose(fp);
-		  performFFT(FFT_left, audioData_left);
-		  fp = fopen("C:\\Users\\franc\\OneDrive\\Dokumente\\MATLAB\\Master_Thesis\\FFT_Left.txt", "w");
-		  for(int i=0; i<NUM_SAMPLES/2; i++){
-			  int n= sprintf (p, "%f", (float) FFT_left[i]);
-			  fprintf(fp,p);
-			  fprintf(fp,"\n");
 		  }
 		  fclose(fp);
 
+		  process_signal(amplitudes, audioData_left, audioData_right);
+		  set_amplitude(amplitudes);
+		  ready = 1;
 
 		  // Delete lock file as signal for "done writing"
 		  remove("C:\\...\\Data_Left.lock");
+		 uint32_t a = __HAL_TIM_GET_COUNTER(&htim7);
+		 HAL_TIM_Base_Stop(&htim7);
 	  }
 
 	  if(Data_Arrived_Second_Half){
@@ -259,29 +257,17 @@ int main(void)
 		  for(int i=0; i<NUM_SAMPLES; i++){
 			  // value is stored in four array parts (LSB left, MSB left, LSB right, MSB right)
 			  // Sort it and value is 18-bit (MSB) in 2's complement
-			  // audioData_left[i] = (int32_t)(rawdata2[4*i+1 + offset] << 16) | rawdata2[4*i + offset];
-			  // audioData_left[i] = rawdata[2*i + 2*NUM_SAMPLES];
-			  audioData_left[i] = ((int32_t)(rawdata[2*i + 2*NUM_SAMPLES] << 0)) >> 14;
-			  audioData_right[i] = ((int32_t)(rawdata[2*i+1 + 2*NUM_SAMPLES] << 0)) >> 14;
+			  audioData_left[i] = ((int32_t)(rawdata[2*i + offset] << 0)) >> 14;
+			  audioData_right[i] = ((int32_t)(rawdata[2*i+1 + offset] << 0)) >> 14;
 			  int n= sprintf (p, "%d", (int) audioData_left[i]);
-			  fprintf(fp,p);
-			  fprintf(fp,"\n");
-			  // audioData_right[i] = (int32_t)(rawdata2[4*i+3 + offset] << 16) | rawdata2[4*i+2 + offset];
-			  // audioData_right[i] = rawdata[2*i+1 + 2*NUM_SAMPLES];
-		  }
-		  fclose(fp);
-		  performFFT(FFT_left, audioData_left);
-		  fp = fopen("C:\\Users\\franc\\OneDrive\\Dokumente\\MATLAB\\Master_Thesis\\FFT_Left.txt", "w");
-		  for(int i=0; i<NUM_SAMPLES/2; i++){
-			  if(i<2){
-				  FFT_left[i] = 0;
-			  }
-			  int n= sprintf (p, "%f", (float) FFT_left[i]);
 			  fprintf(fp,p);
 			  fprintf(fp,"\n");
 		  }
 		  fclose(fp);
 
+		  process_signal(amplitudes, audioData_left, audioData_right);
+		  set_amplitude(amplitudes);
+		  ready = 1;
 
 		  // Delete lock file as signal for "done writing"
 		  remove("C:\\...\\Data_Left.lock");
@@ -313,7 +299,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 50;
+  RCC_OscInitStruct.PLL.PLLN = 96;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 2;
   RCC_OscInitStruct.PLL.PLLR = 2;
@@ -328,10 +314,10 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
   {
     Error_Handler();
   }
@@ -346,6 +332,47 @@ void SystemClock_Config(void)
 		Restart = SET;
 	}
 }*/
+
+/**
+ * @brief		DWT_Init
+ *
+ * @param       void
+ *
+ * @return		void
+ *
+ * @details		function to init delay in us
+ *
+ *
+ * @author		Francis Liechti (FL)
+ * @date		28.05.2025	FL	Created
+ ****************************************************************************/
+void DWT_Init(void) {
+    if (!(CoreDebug->DEMCR & CoreDebug_DEMCR_TRCENA_Msk)) {
+        CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+    }
+    DWT->CYCCNT = 0;
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+}
+
+/*
+ * @brief		delay_us
+ *
+ * @param       uint32_t us
+ *
+ * @return		void
+ *
+ * @details		function to delay in us
+ *
+ *
+ * @author		Francis Liechti (FL)
+ * @date		28.05.2025	FL	Created
+ ****************************************************************************/
+void delay_us(uint32_t us) {
+    uint32_t cycles = (SystemCoreClock / 1000000L) * us;
+    uint32_t start = DWT->CYCCNT;
+    while ((DWT->CYCCNT - start) < cycles);
+}
+
 
 /**
  * @brief		HAL_TIM_PeriodElapsedCallback

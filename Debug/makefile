@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (12.3.rel1)
+# Toolchain: GNU Tools for STM32 (13.3.rel1)
 ################################################################################
 
 -include ../makefile.init
@@ -10,8 +10,6 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include Drivers/STM32F4xx_HAL_Driver/Src/subdir.mk
--include Drivers/CMSIS_DSP/Source/TransformFunctions/subdir.mk
--include Drivers/CMSIS_DSP/Source/CommonTables/subdir.mk
 -include Driver_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/subdir.mk
@@ -65,7 +63,7 @@ main-build: Haptic_Hearing_Aid.elf secondary-outputs
 
 # Tool invocations
 Haptic_Hearing_Aid.elf Haptic_Hearing_Aid.map: $(OBJS) $(USER_OBJS) C:\Users\franc\STMCubeIDE_workspace\Master_Thesis\Haptic_Hearing_Aid\STM32F446RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Haptic_Hearing_Aid.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\franc\STMCubeIDE_workspace\Master_Thesis\Haptic_Hearing_Aid\STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Haptic_Hearing_Aid.map" -Wl,--gc-sections -static -specs=rdimon.specs -lc -lrdimon -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "Haptic_Hearing_Aid.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\franc\STMCubeIDE_workspace\Master_Thesis\Haptic_Hearing_Aid\STM32F446RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Haptic_Hearing_Aid.map" -Wl,--gc-sections -static -L"C:\Users\franc\STMCubeIDE_workspace\Master_Thesis\Haptic_Hearing_Aid\Drivers\CMSIS\Lib\GCC" -specs=rdimon.specs -lc -lrdimon -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

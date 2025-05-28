@@ -22,10 +22,13 @@
 #include "main.h"
 #include "i2c.h"
 #include "arm_math.h"
+#include "arm_const_structs.h"
 
 /*----- Defines -----------------------------------------------------*/
-#define DEV_ADDRESS 0x57 << 1
-#define REG_FIFO_DATA 0x05
+
+#define NUM_FREQ_BANDS 8
+#define NUM_SAMPLES 512
+#define NUM_SECTIONS 4  // For example, 4 biquad sections per filter
 
 /*----- Data type -----------------------------------------------------*/
 
@@ -33,7 +36,9 @@
 /*----- Function declarations -----------------------------------------------------*/
 void filterData(uint16_t *RawValues, int16_t *FilteredValues, uint16_t samplenumber, uint16_t Max_entry);
 void performFFT(float32_t *Result, int32_t *audiodata);
-
+void process_signal(double* amplitudes, int32_t* audioData_Left, int32_t* audioData_right);
+float mean(float* signal, int startpoint, int endpoint);
+void sortvalues(double* amplitudes, float *meanValues, uint8_t direction, float scaleValue);
 
 
 #endif /* AUDIO_H_ */

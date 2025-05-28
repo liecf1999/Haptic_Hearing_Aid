@@ -19,71 +19,35 @@
 #define TIMEOUT HAL_MAX_DELAY
 
 
-// Filtering
-#define FILTER_ORDER_NUM 256
-#define FILTER_ORDER_DEN 1
-
 #define FFT_SIZE 512
+
+// Sample number boundaries of frequency bands
+#define FREQ_BAND_0 8 // 250Hz
+#define FREQ_BAND_1 13 // 406Hz (round up 377Hz)
+#define FREQ_BAND_2 19 // 593Hz (round up 569Hz)
+#define FREQ_BAND_3 28 // 875Hz (round up 857Hz)
+#define FREQ_BAND_4 42 // 1325Hz (round up 1291Hz)
+#define FREQ_BAND_5 63 // 1968Hz (round up 1944Hz)
+#define FREQ_BAND_6 94 // 2937Hz (round up 2926Hz)
+#define FREQ_BAND_7 141 // 4406Hz (round up 4402Hz)
+#define FREQ_BAND_8 256 // 8000Hz
 
 
 /*----- Data ---------------------------------------------------------*/
 
 /*----- Private variables ---------------------------------------------------------*/
-float filter_numerator[FILTER_ORDER_NUM+1] = { -0.0003756224994776, -0.0003369431019081, -0.0002781565043601, -0.0002069986124761, -0.0001330074584534, -0.0000664636475573, -0.0000171831495490, 0.0000067244917099, -0.0000000000000000, -0.0000388621982490, -0.0001070886234117, -0.0001975933877667, -0.0002995060265350, -0.0003992655566701, -0.0004822078943135, -0.0005344917562235, -0.0005451347237297, -0.0005078800719575, -0.0004225988408490, -0.0002959592279965, -0.0001411694353808, 0.0000232842230494, 0.0001758375367713, 0.0002947664659742, 0.0003614629528811, 0.0003636078681905, 0.0002977405693058, 0.0001707593411394, -0.0000000000000000, -0.0001882777937703, -0.0003619368196258, -0.0004872350752231, -0.0005337940542852, -0.0004795665031985, -0.0003150351838515, -0.0000459154320436, 0.0003062057462724, 0.0007055962285288, 0.0011064346920643, 0.0014587941816171, 0.0017158143401893, 0.0018410699047752, 0.0018150210158573, 0.0016394711862794, 0.0013391695606612, 0.0009600574185424, 0.0005641313246168, 0.0002214127628409, -0.0000000000000000, -0.0000444455775228, 0.0001217734746604, 0.0005033803987742, 0.0010729027823907, 0.0017720383695296, 0.0025177734070881, 0.0032127105309104, 0.0037583823356291, 0.0040697793049065, 0.0040890001679528, 0.0037959047129929, 0.0032139395690167, 0.0024098958481129, 0.0014871765201916, 0.0005730939607604, -0.0001983489554858, -0.0007059586172032, -0.0008603923132904, -0.0006198732307493, 0.0000000000000000, 0.0009242334469625, 0.0020250683394477, 0.0031368998882330, 0.0040778691917045, 0.0046754128729431, 0.0047922814611070, 0.0043492264884115, 0.0033407843715587, 0.0018413543062449, -0.0000000000000000, -0.0019760495583341, -0.0038475729958873, -0.0053760516257169, -0.0063585695275793, -0.0066599870887034, -0.0062375178948890, -0.0051536103479692, -0.0035744504989886, -0.0017532979636596, 0.0000000000000000, 0.0013598913574357, 0.0020312489083968, 0.0017944941693991, 0.0005431796174209, -0.0016918800287059, -0.0047363323986334, -0.0082860484623378, -0.0119404243079352, -0.0152519470856774, -0.0177862439805931, -0.0191849695356388, -0.0192229602446042, -0.0178512794103444, -0.0152191293302459, -0.0116700049676933, -0.0077106382340465, -0.0039548504010277, -0.0010479347403371, 0.0004198394429037, 0.0000000000000000, -0.0025384142281879, -0.0071548334887568, -0.0135133461415682, -0.0209942810759814, -0.0287421995001722, -0.0357468030528946, -0.0409489765049989, -0.0433606687138041, -0.0421850494993415, -0.0369226943079495, -0.0274505846605026, -0.0140633989097714, 0.0025293764801051, 0.0212520202629736, 0.0407530506016512, 0.0595288411351802, 0.0760675698393131, 0.0889980744268326, 0.0972273426589254, 0.1000514177977891, 0.0972273426589254, 0.0889980744268326, 0.0760675698393131, 0.0595288411351802, 0.0407530506016512, 0.0212520202629736, 0.0025293764801051, -0.0140633989097714, -0.0274505846605026, -0.0369226943079495, -0.0421850494993415, -0.0433606687138041, -0.0409489765049989, -0.0357468030528946, -0.0287421995001722, -0.0209942810759814, -0.0135133461415682, -0.0071548334887568, -0.0025384142281879, 0.0000000000000000, 0.0004198394429037, -0.0010479347403371, -0.0039548504010277, -0.0077106382340465, -0.0116700049676933, -0.0152191293302459, -0.0178512794103444, -0.0192229602446042, -0.0191849695356388, -0.0177862439805931, -0.0152519470856774, -0.0119404243079352, -0.0082860484623378, -0.0047363323986334, -0.0016918800287059, 0.0005431796174209, 0.0017944941693991, 0.0020312489083968, 0.0013598913574357, 0.0000000000000000, -0.0017532979636596, -0.0035744504989886, -0.0051536103479692, -0.0062375178948890, -0.0066599870887034, -0.0063585695275793, -0.0053760516257169, -0.0038475729958873, -0.0019760495583341, -0.0000000000000000, 0.0018413543062449, 0.0033407843715587, 0.0043492264884115, 0.0047922814611070, 0.0046754128729431, 0.0040778691917045, 0.0031368998882330, 0.0020250683394477, 0.0009242334469625, 0.0000000000000000, -0.0006198732307493, -0.0008603923132904, -0.0007059586172032, -0.0001983489554858, 0.0005730939607604, 0.0014871765201916, 0.0024098958481129, 0.0032139395690167, 0.0037959047129929, 0.0040890001679528, 0.0040697793049065, 0.0037583823356291, 0.0032127105309104, 0.0025177734070881, 0.0017720383695296, 0.0010729027823907, 0.0005033803987742, 0.0001217734746604, -0.0000444455775228, -0.0000000000000000, 0.0002214127628409, 0.0005641313246168, 0.0009600574185424, 0.0013391695606612, 0.0016394711862794, 0.0018150210158573, 0.0018410699047752, 0.0017158143401893, 0.0014587941816171, 0.0011064346920643, 0.0007055962285288, 0.0003062057462724, -0.0000459154320436, -0.0003150351838515, -0.0004795665031985, -0.0005337940542852, -0.0004872350752231, -0.0003619368196258, -0.0001882777937703, -0.0000000000000000, 0.0001707593411394, 0.0002977405693058, 0.0003636078681905, 0.0003614629528811, 0.0002947664659742, 0.0001758375367713, 0.0000232842230494, -0.0001411694353808, -0.0002959592279965, -0.0004225988408490, -0.0005078800719575, -0.0005451347237297, -0.0005344917562235, -0.0004822078943135, -0.0003992655566701, -0.0002995060265350, -0.0001975933877667, -0.0001070886234117, -0.0000388621982490, -0.0000000000000000, 0.0000067244917099, -0.0000171831495490, -0.0000664636475573, -0.0001330074584534, -0.0002069986124761, -0.0002781565043601, -0.0003369431019081, -0.0003756224994776 };
-float filter_denuminator[FILTER_ORDER_DEN] = {1};
+float fftSignal[NUM_SAMPLES];
+float amplitudeMeans[NUM_FREQ_BANDS];
+
+const int freqbands[NUM_FREQ_BANDS+1] = {FREQ_BAND_0, FREQ_BAND_1, FREQ_BAND_2, FREQ_BAND_3,
+									FREQ_BAND_4, FREQ_BAND_5, FREQ_BAND_6, FREQ_BAND_7, FREQ_BAND_8
+};
+
+// Number of actuator mapped to its frequency
+const int sort_frequencies_left[NUM_FREQ_BANDS] = {0, 1, 2, 3, 8, 9, 10, 11};
+const int sort_frequencies_right[NUM_FREQ_BANDS] = {7, 6, 5, 4, 15, 14, 13, 12};
 
 float32_t input[2 * FFT_SIZE];      // Interleaved real/imag for FFT
-arm_cfft_instance_f32 fft_inst;
-
-
-/**
- * @brief		filterData
- *
- * @param       uint16t* Rawvalues
- *
- * @param		uint16_t* FilteredValues
- *
- * @param       int samplenumber
- *
- * @param		int MAX_entry
- *
- * @return		void
- *
- * @details		Function that adapts a digital filter (FIR or IIR), which values are defined in private variables
- * 				Directly calculates the filtered value for a sample and gives it back into structure.
- * 				To make a FIR, set the order Denuminator to 1
- * 				Filter was designed using MATLAB (FIR, bandpass between 0.5Hz and 3Hz)
- *
- * @author		Francis Liechti (FL)
- * @date		16.12.2024	FL	Created
- * 				11.03.2025	FL	Adapted
- ****************************************************************************/
-void filterData(uint16_t *RawValues, int16_t *FilteredValues, uint16_t samplenumber, uint16_t Max_entry){
-	float numerator = 0;
-	float denominator = 0;
-
-	for(int i=0; i<FILTER_ORDER_NUM+1; i++){
-		if((samplenumber - i) < 0){
-			numerator += RawValues[Max_entry + samplenumber - i] * filter_numerator[i];
-		} else {
-			numerator += RawValues[samplenumber - i] * filter_numerator[i];
-
-		}
-	}
-	if(FILTER_ORDER_DEN > 1){
-		for(int i=0; i<FILTER_ORDER_DEN; i++){
-			if((samplenumber - i -1) < 0){
-				denominator += RawValues[Max_entry + samplenumber - i - 1] * filter_denuminator[i];
-			} else {
-				denominator += RawValues[samplenumber - i - 1] * filter_numerator[i];
-			}
-		}
-	} else{
-		denominator = 1;
-	}
-	// calculate filtered values
-	FilteredValues[samplenumber] = numerator / denominator;
-}
 
 
 /**
@@ -95,35 +59,129 @@ void filterData(uint16_t *RawValues, int16_t *FilteredValues, uint16_t samplenum
  *
  * @return		void
  *
- * @details		Function that adapts a digital filter (FIR or IIR), which values are defined in private variables
- * 				Directly calculates the filtered value for a sample and gives it back into structure.
- * 				To make a FIR, set the order Denuminator to 1
- * 				Filter was designed using MATLAB (FIR, bandpass between 0.5Hz and 3Hz)
+ * @details		Function that performs fft based on arm library
  *
  * @author		Francis Liechti (FL)
- * @date		16.12.2024	FL	Created
- * 				11.03.2025	FL	Adapted
+ * @date		27.05.2025	FL	Created
+ *
  ****************************************************************************/
 void performFFT(float *Result, int32_t *audiodata){
 	// 1. Fill input
 	for (int i = 0; i < FFT_SIZE; i++) {
 		// Normalize if desired: value ∈ [-131072, +131071]
-		float normalized = ((float) audiodata[i]) / 131072.0f;
+//		float normalized = ((float) audiodata[i]) / 131072.0f;
+		float normalized = ((float) audiodata[i]);
 
 		input[2*i] = normalized;      // Real part
 		input[2*i + 1] = 0.0f;        // Imaginary part (0 for real signals)
 	}
 
-	 // 2. Initialize the FFT structure
-	arm_cfft_init_f32(&fft_inst, FFT_SIZE);
+	// 2. Perform the complex FFT in-place
+	arm_cfft_f32(&arm_cfft_sR_f32_len512, input, 0, 1);  // Forward FFT, with bit reversal
 
-	// 3. Perform the complex FFT in-place
-	arm_cfft_f32(&fft_inst, input, 0, 1);  // Forward FFT, with bit reversal
-
-	// 4. Compute magnitude from real and imaginary parts
+	// 3. Compute magnitude from real and imaginary parts
 	for (int i = 0; i < FFT_SIZE; i++) {
 		float real = input[2 * i];
 		float imag = input[2 * i + 1];
-		Result[i] = sqrtf(real * real + imag * imag);
+		Result[i] = 20*log10f(sqrtf(real * real + imag * imag));
+	}
+}
+
+/**
+ * @brief		process_signal
+ *
+ * @param      	double* amplitudes
+ *
+ * @param		int32_t* audioData_Left
+ *
+ * @param		int32_t* audioData_Right
+ *
+ * @return		void
+ *
+ * @details		Function that performs fft based on arm library
+ *
+ * @author		Francis Liechti (FL)
+ * @date		27.05.2025	FL	Created
+ *
+ ****************************************************************************/
+void process_signal(double* amplitudes, int32_t* audioData_Left, int32_t* audioData_right) {
+
+	// Beamforming
+	uint8_t direction = 0; //0 = dominating left, 1 = dominating right
+	float scaleValue = 0; // for the non-dominating side
+
+	// FFT
+	performFFT(fftSignal, audioData_Left);
+
+	for(int i=0; i<NUM_FREQ_BANDS; i++){
+		amplitudeMeans[i] = mean(fftSignal, freqbands[i], freqbands[i+1]);
+	}
+
+	// add some magical scaling
+
+	// Set amplitudes
+	sortvalues(amplitudes, amplitudeMeans, direction, scaleValue);
+
+}
+
+
+/**
+ * @brief		mean
+ *
+ * @param      	float* signal
+ *
+ * @param		int startpoint
+ *
+ * @param		int endpoint
+ *
+ * @return		mean
+ *
+ * @details		Function that calculates mean of a signal between start and endpoint
+ *
+ * @author		Francis Liechti (FL)
+ * @date		28.05.2025	FL	Created
+ *
+ ****************************************************************************/
+float mean(float* signal, int startpoint, int endpoint){
+	int size = endpoint-startpoint;
+	float sum = 0;
+
+	for(int i=startpoint; i<=endpoint; i++){
+		sum += signal[i];
+	}
+	return (sum/size);
+}
+
+/**
+ * @brief		sortvalues
+ *
+ * @param      	double* amplitudes
+ *
+ * @param		float* meanValues
+ *
+ * @param		uint8_t direction
+ *
+ * @param 		float scaleValue
+ *
+ * @return		void
+ *
+ * @details		Function that maps (and scales) the values on the specific actuator.
+ *
+ * @author		Francis Liechti (FL)
+ * @date		28.05.2025	FL	Created
+ *
+ ****************************************************************************/
+void sortvalues(double* amplitudes, float *meanValues, uint8_t direction, float scaleValue){
+
+	if(direction == 0){
+		for(int i=0; i<NUM_FREQ_BANDS; i++){
+			amplitudes[sort_frequencies_left[i]] = (double) meanValues[i];
+			amplitudes[sort_frequencies_right[i]] = (double) meanValues[i] * scaleValue;
+		}
+	} else {
+		for(int i=0; i<NUM_FREQ_BANDS; i++){
+			amplitudes[sort_frequencies_left[i]] = (double) meanValues[i]*scaleValue;
+			amplitudes[sort_frequencies_right[i]] = (double) meanValues[i];
+		}
 	}
 }

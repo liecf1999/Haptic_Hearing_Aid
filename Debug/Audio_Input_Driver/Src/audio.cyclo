@@ -1,2 +1,4 @@
-../Audio_Input_Driver/Src/audio.c:61:6:filterData	3
-../Audio_Input_Driver/Src/audio.c:107:6:performFFT	3
+../Audio_Input_Driver/Src/audio.c:68:6:performFFT	3
+../Audio_Input_Driver/Src/audio.c:107:6:process_signal	2
+../Audio_Input_Driver/Src/audio.c:145:7:mean	2
+../Audio_Input_Driver/Src/audio.c:174:6:sortvalues	4
