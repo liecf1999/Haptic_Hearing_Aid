@@ -1,4 +1,10 @@
-../Audio_Input_Driver/Src/audio.c:68:6:performFFT	3
-../Audio_Input_Driver/Src/audio.c:107:6:process_signal	2
-../Audio_Input_Driver/Src/audio.c:145:7:mean	2
-../Audio_Input_Driver/Src/audio.c:174:6:sortvalues	4
+../Audio_Input_Driver/Src/audio.c:72:6:performFFT	3
+../Audio_Input_Driver/Src/audio.c:110:6:process_signal	3
+../Audio_Input_Driver/Src/audio.c:155:7:mean	2
+../Audio_Input_Driver/Src/audio.c:184:6:sortvalues	4
+../Audio_Input_Driver/Src/audio.c:214:6:generateHammingWindow	2
+../Audio_Input_Driver/Src/audio.c:233:6:generateHannWindow	2
+../Audio_Input_Driver/Src/audio.c:254:6:applyWindow	2
+../Audio_Input_Driver/Src/audio.c:276:7:compute_energy	2
+../Audio_Input_Driver/Src/audio.c:303:5:estimate_delay	6
+../Audio_Input_Driver/Src/audio.c:344:5:beamform_direction	4

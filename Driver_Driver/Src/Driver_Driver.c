@@ -37,7 +37,8 @@ uint8_t Buf[MAX_BUFFER_SIZE] = {0}; // Buffer for I2C-data
 // Init data
 // Library Mode
 
-uint8_t set_mode[2] = {REG_MODE, MODE_EDGE};
+//uint8_t set_mode[2] = {REG_MODE, MODE_EDGE};
+uint8_t set_mode[2] = {REG_MODE, MODE_LEVEL};
 uint8_t set_LRA[2] = {REG_FEEDBACK_CTRL, MODE_LRA | FB_BRAKE_FACTOR | LOOP_GAIN | BACK_EMF_GAIN};
 uint8_t set_Control3[2] = {REG_CONTROL3, NG_THRESHOLD | AUTO_CALIBRATION};
 uint8_t start_auto_calibration[2] = {REG_MODE,  MODE_AUTO_CALIBRATION};

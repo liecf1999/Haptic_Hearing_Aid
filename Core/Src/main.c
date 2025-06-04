@@ -76,7 +76,7 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 void generate_ramp(double *ramp, uint8_t maxvalue, uint8_t numValues);
 void ramp_set(double *ramp, double *amplitudes, uint8_t counter, uint8_t numvalues);
-extern void initialise_monitor_handles(void);
+//extern void initialise_monitor_handles(void); // for semihosting
 void DWT_Init(void);
 void delay_us(uint32_t us);
 
@@ -135,11 +135,13 @@ int main(void)
 	double ramp[numValues];
 	uint8_t maxValue = 0x5B; // 2.3V RMS
 
-	generate_ramp(ramp, maxValue, numValues);
+	// generate_ramp(ramp, maxValue, numValues);
 	double amplitudes[NUM_ACTUATORS] = {0};
 	uint8_t counter = 0;
 	int32_t audioData_left[NUM_SAMPLES];
 	int32_t audioData_right[NUM_SAMPLES];
+
+	generateHammingWindow();
 
 
 //	uint8_t drivers = 0;
@@ -151,10 +153,10 @@ int main(void)
 		amplitudes[j] = 0;
 	}
 
-	// Part for debugging
-	initialise_monitor_handles();
-
-	printf("Semihosting test...\n\r");
+//	// Part for debugging
+//	initialise_monitor_handles();
+//
+//	printf("Semihosting test...\n\r");
 
 	char s[50];
 	char *p;
@@ -164,8 +166,9 @@ int main(void)
 
 //	HAL_NVIC_EnableIRQ(TIM7_IRQn);
 //	HAL_TIM_Base_Start_IT(&htim7);
+	HAL_TIM_Base_Start(&htim7);
 
-	HAL_SAI_Receive_DMA(&hsai_BlockA1, (uint32_t*)rawdata, DMA_BUFFER_SIZE);
+	HAL_SAI_Receive_DMA(&hsai_BlockA1, (uint32_t *)rawdata, DMA_BUFFER_SIZE);
 
 
 	HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, RESET);
@@ -183,94 +186,80 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  if(TimCollapsed){
 		TimCollapsed = RESET;
-		counter++;
-		int i = counter/10;
-
-		if(i>=NUM_ACTUATORS){
-			counter = 0;
-		}
-		for(int j=0; j<NUM_ACTUATORS; j++){
-			amplitudes[j] = 0;
-		}
-		// amplitudes[i] = maxValue;
-
-		// set_amplitude(amplitudes);
-		ready = 1;
 	  }
 
-	  if(ready){
-		  ready = 0;
+	  if(ready!=0){
 		  // clear actual waveform with rising edge
 		  HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, RESET);
-//		  delay_us(100);
-		  HAL_Delay(1);
+		  delay_us(100);
+//		  HAL_Delay(1);
 		  HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, SET);
 //		  delay_us(100);
-		  HAL_Delay(5);
+//		  HAL_Delay(5);
 		  // set new waveform with rising edge
-		  HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, RESET);
+//		  HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, RESET);
 //		  delay_us(100);
-		  HAL_Delay(1);
-		  HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, SET);
+////		  HAL_Delay(1);
+//		  HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, SET);
+
+		  ready = 0;
 	  }
 
-	  if(Data_Arrived){
-		  Data_Arrived = RESET;
-	  }
-	  if(Data_Arrived_First_Half){
+	  if(Data_Arrived_First_Half && (ready == 0)){
 		  Data_Arrived_First_Half = RESET;
-		  HAL_TIM_Base_Start(&htim7);
 		  // Create lock file to have no conflicts with matlab
-		  FILE* lock = fopen("C:\\...\\Data_Left.lock", "w");
-		  if (lock) fclose(lock);  // just create and close
+//		  FILE* lock = fopen("C:\\...\\Data_Left.lock", "w");
+//		  if (lock) fclose(lock);  // just create and close
 
-		  fp=fopen("C:\\Users\\franc\\OneDrive\\Dokumente\\MATLAB\\Master_Thesis\\Data_Left.txt", "w");
+//		  fp=fopen("C:\\Users\\franc\\OneDrive\\Dokumente\\MATLAB\\Master_Thesis\\Data_Left.txt", "w");
 		  for(int i=0; i<NUM_SAMPLES; i++){
-			  // value is stored in four array parts (LSB left, MSB left, LSB right, MSB right)
-			  // Sort it and value is 18-bit (MSB) in 2's complement
+//			  // value is stored in four array parts (LSB left, MSB left, LSB right, MSB right)
+//			  // Sort it and value is 18-bit (MSB) in 2's complement
 			  audioData_left[i] = ((int32_t)(rawdata[2*i] << 0)) >> 14;
 			  audioData_right[i] = ((int32_t)(rawdata[2*i+1] << 0)) >> 14;
-			  int n= sprintf (p, "%d", (int) audioData_left[i]);
-			  fprintf(fp,p);
-			  fprintf(fp,"\n");
+//			  int n= sprintf (p, "%d", (int) audioData_left[i]);
+//			  fprintf(fp,p);
+//			  fprintf(fp,"\n");
 		  }
-		  fclose(fp);
+//		  fclose(fp);
 
 		  process_signal(amplitudes, audioData_left, audioData_right);
+		  __disable_irq();
 		  set_amplitude(amplitudes);
+		  __enable_irq();
 		  ready = 1;
 
 		  // Delete lock file as signal for "done writing"
-		  remove("C:\\...\\Data_Left.lock");
-		 uint32_t a = __HAL_TIM_GET_COUNTER(&htim7);
-		 HAL_TIM_Base_Stop(&htim7);
+//		   remove("C:\\...\\Data_Left.lock");
 	  }
 
-	  if(Data_Arrived_Second_Half){
+	  if(Data_Arrived_Second_Half && (ready==0)){
 		  Data_Arrived_Second_Half = RESET;
 		  // Create lock file to have no conflicts with matlab
-		  FILE* lock = fopen("C:\\...\\Data_Left.lock", "w");
-		  if (lock) fclose(lock);  // just create and close
+//		  FILE* lock = fopen("C:\\...\\Data_Left.lock", "w");
+//		  if (lock) fclose(lock);  // just create and close
 		  int offset = DMA_BUFFER_SIZE/2;
-
-		  fp=fopen("C:\\Users\\franc\\OneDrive\\Dokumente\\MATLAB\\Master_Thesis\\Data_Left.txt", "w");
+//
+//		  fp=fopen("C:\\Users\\franc\\OneDrive\\Dokumente\\MATLAB\\Master_Thesis\\Data_Left.txt", "w");
 		  for(int i=0; i<NUM_SAMPLES; i++){
-			  // value is stored in four array parts (LSB left, MSB left, LSB right, MSB right)
-			  // Sort it and value is 18-bit (MSB) in 2's complement
+//			  // value is stored in four array parts (LSB left, MSB left, LSB right, MSB right)
+//			  // Sort it and value is 18-bit (MSB) in 2's complement
 			  audioData_left[i] = ((int32_t)(rawdata[2*i + offset] << 0)) >> 14;
 			  audioData_right[i] = ((int32_t)(rawdata[2*i+1 + offset] << 0)) >> 14;
-			  int n= sprintf (p, "%d", (int) audioData_left[i]);
-			  fprintf(fp,p);
-			  fprintf(fp,"\n");
+//			  int n= sprintf (p, "%d", (int) audioData_left[i]);
+//			  fprintf(fp,p);
+//			  fprintf(fp,"\n");
 		  }
-		  fclose(fp);
+//		  fclose(fp);
 
 		  process_signal(amplitudes, audioData_left, audioData_right);
+		  __disable_irq();
 		  set_amplitude(amplitudes);
-		  ready = 1;
+		  __enable_irq();
+		  ready = 2;
 
 		  // Delete lock file as signal for "done writing"
-		  remove("C:\\...\\Data_Left.lock");
+//		  remove("C:\\...\\Data_Left.lock");
 	  }
   }
   /* USER CODE END 3 */
@@ -443,10 +432,14 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 //}
 
 void HAL_SAI_RxCpltCallback(SAI_HandleTypeDef *hsai){
-	Data_Arrived_Second_Half = SET;
+	if(hsai == &hsai_BlockA1){
+		Data_Arrived_Second_Half = SET;
+	}
 }
 void HAL_SAI_RxHalfCpltCallback(SAI_HandleTypeDef *hsai){
-	Data_Arrived_First_Half = SET;
+	if(hsai == &hsai_BlockA1){
+		Data_Arrived_First_Half = SET;
+	}
 }
 
 

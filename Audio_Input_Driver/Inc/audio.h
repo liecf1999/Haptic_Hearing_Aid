@@ -23,6 +23,7 @@
 #include "i2c.h"
 #include "arm_math.h"
 #include "arm_const_structs.h"
+#include <stdlib.h>
 
 /*----- Defines -----------------------------------------------------*/
 
@@ -35,10 +36,16 @@
 
 /*----- Function declarations -----------------------------------------------------*/
 void filterData(uint16_t *RawValues, int16_t *FilteredValues, uint16_t samplenumber, uint16_t Max_entry);
-void performFFT(float32_t *Result, int32_t *audiodata);
-void process_signal(double* amplitudes, int32_t* audioData_Left, int32_t* audioData_right);
+void performFFT(float32_t *Result, float32_t *audiodata);
+void process_signal(double* amplitudes, int32_t* audioData_Left, int32_t* audioData_Right);
 float mean(float* signal, int startpoint, int endpoint);
 void sortvalues(double* amplitudes, float *meanValues, uint8_t direction, float scaleValue);
+void generateHammingWindow(void);
+void generateHannWindow(void);
+void applyWindow(int32_t *input, float32_t *output);
+float compute_energy(float32_t* signal, int size);
+int estimate_delay(const float* left, const float* right, int size, int max_delay);
+int beamform_direction(float* left, float* right, float *scaleValue);
 
 
 #endif /* AUDIO_H_ */
