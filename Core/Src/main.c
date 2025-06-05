@@ -69,6 +69,10 @@ double t_sample = 0.0003; // 300us
 uint16_t freq = 180; // 180 Hz (new actuator)
 double sinus_sampletime = 0.0001; //100us
 
+float fftSignal[NUM_SAMPLES];
+float WindowedSignal[NUM_SAMPLES];
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -132,20 +136,15 @@ int main(void)
  DWT_Init();
 
 	uint8_t numValues = 80;
-	double ramp[numValues];
 	uint8_t maxValue = 0x5B; // 2.3V RMS
 
-	// generate_ramp(ramp, maxValue, numValues);
 	double amplitudes[NUM_ACTUATORS] = {0};
 	uint8_t counter = 0;
 	int32_t audioData_left[NUM_SAMPLES];
 	int32_t audioData_right[NUM_SAMPLES];
 
 	generateHammingWindow();
-
-
-//	uint8_t drivers = 0;
-//	uint8_t firstround = 0;
+	delay_estimator_init();
 
 	uint8_t ready = 0;
 
@@ -189,19 +188,11 @@ int main(void)
 	  }
 
 	  if(ready!=0){
-		  // clear actual waveform with rising edge
+		  // clear actual waveform with falling edge
 		  HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, RESET);
 		  delay_us(100);
-//		  HAL_Delay(1);
+		  // set new waveform
 		  HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, SET);
-//		  delay_us(100);
-//		  HAL_Delay(5);
-		  // set new waveform with rising edge
-//		  HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, RESET);
-//		  delay_us(100);
-////		  HAL_Delay(1);
-//		  HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, SET);
-
 		  ready = 0;
 	  }
 
@@ -213,8 +204,8 @@ int main(void)
 
 //		  fp=fopen("C:\\Users\\franc\\OneDrive\\Dokumente\\MATLAB\\Master_Thesis\\Data_Left.txt", "w");
 		  for(int i=0; i<NUM_SAMPLES; i++){
-//			  // value is stored in four array parts (LSB left, MSB left, LSB right, MSB right)
-//			  // Sort it and value is 18-bit (MSB) in 2's complement
+			  // value is stored in four array parts (LSB left, MSB left, LSB right, MSB right)
+			  // Sort it and value is 18-bit (MSB) in 2's complement
 			  audioData_left[i] = ((int32_t)(rawdata[2*i] << 0)) >> 14;
 			  audioData_right[i] = ((int32_t)(rawdata[2*i+1] << 0)) >> 14;
 //			  int n= sprintf (p, "%d", (int) audioData_left[i]);
@@ -223,10 +214,26 @@ int main(void)
 		  }
 //		  fclose(fp);
 
-		  process_signal(amplitudes, audioData_left, audioData_right);
+
 		  __disable_irq();
+		  process_signal(amplitudes, audioData_left, audioData_right, fftSignal, WindowedSignal);
 		  set_amplitude(amplitudes);
 		  __enable_irq();
+//		  fp=fopen("C:\\Users\\franc\\OneDrive\\Dokumente\\MATLAB\\Master_Thesis\\Data_FFT.txt", "w");
+//		  for(int i=0; i<NUM_SAMPLES; i++){
+//			  int n= sprintf (p, "%d", (int) fftSignal[i]);
+//			  fprintf(fp,p);
+//			  fprintf(fp,"\n");
+//		  }
+//		  fclose(fp);
+
+//		  fp=fopen("C:\\Users\\franc\\OneDrive\\Dokumente\\MATLAB\\Master_Thesis\\Data_Windowed.txt", "w");
+//		  for(int i=0; i<NUM_SAMPLES; i++){
+//			  int n= sprintf (p, "%d", (int) WindowedSignal[i]);
+//			  fprintf(fp,p);
+//			  fprintf(fp,"\n");
+//		  }
+//		  fclose(fp);
 		  ready = 1;
 
 		  // Delete lock file as signal for "done writing"
@@ -252,7 +259,7 @@ int main(void)
 		  }
 //		  fclose(fp);
 
-		  process_signal(amplitudes, audioData_left, audioData_right);
+		  process_signal(amplitudes, audioData_left, audioData_right, fftSignal, WindowedSignal);
 		  __disable_irq();
 		  set_amplitude(amplitudes);
 		  __enable_irq();
@@ -313,14 +320,6 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-/*void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-	if(GPIO_Pin==INT_Pin){
-		dataArrived = SET;
-	}
-	if(GPIO_Pin == NEW_MEAS_Pin){
-		Restart = SET;
-	}
-}*/
 
 /**
  * @brief		DWT_Init
@@ -396,9 +395,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
  * @date		27.03.2025	FL	Created
  ****************************************************************************/
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-//	if(B1_INT_Pin == GPIO_Pin){
-//		Button = SET;
-//	}
+
 }
 
 /**
@@ -408,105 +405,55 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
  *
  * @return		void
  *
- * @details		callback routine for DMA (ADC).
+ * @details		callback routine for ADC (DMA).
  *
  *
  * @author		Francis Liechti (FL)
  * @date		12.03.2025	FL	Created
  ****************************************************************************/
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
-//	if(hadc->Instance == ADC1){
-//		Data_Arrived_Left = SET;
-//	}
-//	if(hadc->Instance == ADC2){
-//		Data_Arrived_Right = SET;
-//	}
 }
 
-//void HAL_I2S_RxCpltCallback(I2S_HandleTypeDef *hi2s){
-//	Data_Arrived_Second_Half = SET;
-//}
-//
-//void HAL_I2S_RxHalfCpltCallback(I2S_HandleTypeDef *hi2s){
-//	Data_Arrived_First_Half = SET;
-//}
-
+/**
+ * @brief		HAL_SAI_RxCpltCallback
+ *
+ * @param       hsai
+ *
+ * @return		void
+ *
+ * @details		callback routine for SAI (I2S DMA). Gets called when buffer is full
+ *
+ *
+ * @author		Francis Liechti (FL)
+ * @date		05.06.2025	FL	Created
+ ****************************************************************************/
 void HAL_SAI_RxCpltCallback(SAI_HandleTypeDef *hsai){
 	if(hsai == &hsai_BlockA1){
 		Data_Arrived_Second_Half = SET;
+//		HAL_GPIO_WritePin(TIM_MEAS_GPIO_Port, TIM_MEAS_Pin, SET);
 	}
 }
+
+/**
+ * @brief		HAL_SAI_RxHalfCpltCallback
+ *
+ * @param       hsai
+ *
+ * @return		void
+ *
+ * @details		callback routine for SAI (I2S DMA). Gets called when buffer is half full
+ *
+ *
+ * @author		Francis Liechti (FL)
+ * @date		05.06.2025	FL	Created
+ ****************************************************************************/
 void HAL_SAI_RxHalfCpltCallback(SAI_HandleTypeDef *hsai){
 	if(hsai == &hsai_BlockA1){
 		Data_Arrived_First_Half = SET;
+//		HAL_GPIO_WritePin(TIM_MEAS_GPIO_Port, TIM_MEAS_Pin, RESET);
 	}
 }
 
-
-
-/**
- * @brief		ramp
- *
- * @param       double *ramp
- *
- * @param		double maxvalue
- *
- * @param		uint8_t numValues
- *
- * @return		void
- *
- * @details		function to calculate ramp
- *
- *
- * @author		Francis Liechti (FL)
- * @date		12.03.2025	FL	Created
- ****************************************************************************/
-void generate_ramp(double *ramp, uint8_t maxvalue, uint8_t numValues){
-	// numValues only for whole triangle
-	double difference = 2*((double) maxvalue/ (double)numValues);
-	for(int i=0; i<numValues; i++){
-		if(i<=numValues/2){
-			ramp[i] = i*difference;
-		} else {
-			ramp[i] = ((double)maxvalue-(i-numValues/2)*difference);
-		}
-	}
-}
-
-/**
- * @brief		ramp
- *
- * @param		double *ramp
- *
- * @param       double *amplitudes
- *
- * @param		uint8_t counter
- *
- * @param		uint8_t numvalues
- *
- * @return		void
- *
- * @details		function to calculate next value of a ramp function
- *
- *
- * @author		Francis Liechti (FL)
- * @date		12.03.2025	FL	Created
- ****************************************************************************/
-void ramp_set(double *ramp, double *amplitudes, uint8_t counter, uint8_t numvalues){
-	uint8_t countval = counter%(numvalues/2);
-	uint8_t countval2 = countval + (numvalues/2);
-	uint8_t number = counter/(numvalues/2);
-	uint8_t number2 = (counter >= numvalues / 2) ? (number - 1) : 0;
-
-	for(int i=0; i<NUM_ACTUATORS; i++){
-		amplitudes[i] = 0;
-	}
-
-	amplitudes[number] = ramp[countval];
-	if(counter >= numvalues/2){
-		amplitudes[number2] = ramp[countval2];
-	}
-}
 /* USER CODE END 4 */
 
 /**

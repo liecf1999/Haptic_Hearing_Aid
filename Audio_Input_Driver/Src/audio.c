@@ -21,6 +21,7 @@
 
 #define FFT_SIZE 512
 #define MAX_DELAY 64  // ~4ms max delay = 64 samples at 16kHz
+#define CORR_FFT_LEN (NUM_SAMPLES*2)   // power-of-two ≥ 2*NUM_SAMPLES
 
 // Sample number boundaries of frequency bands
 #define FREQ_BAND_0 8 // 250Hz
@@ -37,7 +38,6 @@
 /*----- Data ---------------------------------------------------------*/
 
 /*----- Private variables ---------------------------------------------------------*/
-float fftSignal[NUM_SAMPLES];
 float amplitudeMeans[NUM_FREQ_BANDS];
 
 const int freqbands[NUM_FREQ_BANDS+1] = {FREQ_BAND_0, FREQ_BAND_1, FREQ_BAND_2, FREQ_BAND_3,
@@ -52,6 +52,12 @@ float32_t input[2 * FFT_SIZE];      // Interleaved real/imag for FFT
 float32_t window[NUM_SAMPLES];
 float32_t windowed_Signal_Left[NUM_SAMPLES];
 float32_t windowed_Signal_Right[NUM_SAMPLES];
+
+static arm_rfft_fast_instance_f32  rfft;
+static float32_t fftLeft  [CORR_FFT_LEN];
+static float32_t fftRight [CORR_FFT_LEN];
+static float32_t fftCross [CORR_FFT_LEN];
+static float32_t corrTime [CORR_FFT_LEN];
 
 
 /**
@@ -72,9 +78,9 @@ float32_t windowed_Signal_Right[NUM_SAMPLES];
 void performFFT(float *Result, float32_t *audiodata){
 	// 1. Fill input
 	for (int i = 0; i < FFT_SIZE; i++) {
-		// Normalize if desired: value ∈ [-131072, +131071]
-//		float normalized = ((float) audiodata[i]) / 131072.0f;
-
+//		// Normalize if desired: value ∈ [-131072, +131071]
+////		float normalized = ((float) audiodata[i]) / 131072.0f;
+//
 		input[2*i] = audiodata[i];      // Real part
 		input[2*i + 1] = 0.0f;        // Imaginary part (0 for real signals)
 	}
@@ -84,9 +90,9 @@ void performFFT(float *Result, float32_t *audiodata){
 
 	// 3. Compute magnitude from real and imaginary parts
 	for (int i = 0; i < FFT_SIZE; i++) {
-		float real = input[2 * i];
-		float imag = input[2 * i + 1];
-		Result[i] = 20*log10f(sqrtf(real * real + imag * imag));
+		float real = input[2*i];
+		float imag = input[2*i + 1];
+		Result[i] = 10.0f * log10f(real * real + imag * imag); //instead of 20*log10(sqrtf) for time optimization
 	}
 }
 
@@ -107,7 +113,7 @@ void performFFT(float *Result, float32_t *audiodata){
  * @date		27.05.2025	FL	Created
  *
  ****************************************************************************/
-void process_signal(double* amplitudes, int32_t* audioData_Left, int32_t* audioData_Right) {
+void process_signal(double* amplitudes, int32_t* audioData_Left, int32_t* audioData_Right, float* fftSignal, float* WindowedSignal) {
 
 	// Beamforming
 	uint8_t direction = 0; //0 = dominating left, 1 = dominating right
@@ -130,6 +136,9 @@ void process_signal(double* amplitudes, int32_t* audioData_Left, int32_t* audioD
 		amplitudeMeans[i] = amplitudeMeans[i]/2;
 	}
 
+	for(int i=0; i<NUM_SAMPLES; i++){
+		WindowedSignal[i] = windowed_Signal_Left[i];
+	}
 	// Set amplitudes
 	sortvalues(amplitudes, amplitudeMeans, direction, scaleValue);
 }
@@ -345,7 +354,7 @@ int beamform_direction(float* left, float* right, float *scaleValue){
 
     float e_left = compute_energy(left, NUM_SAMPLES);
     float e_right = compute_energy(right, NUM_SAMPLES);
-    int delay = estimate_delay(left, right, NUM_SAMPLES, MAX_DELAY);
+    int delay = estimate_delay_fast(left, right, NUM_SAMPLES, MAX_DELAY);
 
     // ratio for scaleValue weighted from delay and energy
     float e_ratio = e_left / (e_left + e_right + 1e-6f);
@@ -359,4 +368,68 @@ int beamform_direction(float* left, float* right, float *scaleValue){
         return (delay > 0) ? +1 : -1;  // left or right
     else
         return (e_left > e_right) ? +1 : -1;
+}
+
+void delay_estimator_init(void)
+{
+    arm_rfft_fast_init_f32(&rfft, CORR_FFT_LEN);   // returns ARM_MATH_SUCCESS
+}
+
+
+/*------------------------------------------------------------------
+ *  Returns: best lag in samples  (positive ⇒ right channel lags,
+ *                                i.e. sound from LEFT)
+ *-----------------------------------------------------------------*/
+int estimate_delay_fast(const float32_t *left,
+                        const float32_t *right,
+                        int numSamples,
+                        int maxDelay)          // ± range to search
+{
+    const uint32_t N = CORR_FFT_LEN;           // 1024 here
+    const uint32_t Nby2 = N;                   // real FFT outputs N complex pts
+
+    /* ----- 1. Copy signals into zero-padded FFT buffers ----- */
+    memset(fftLeft,  0, N * sizeof(float32_t));
+    memset(fftRight, 0, N * sizeof(float32_t));
+    memcpy(fftLeft,  left,  numSamples * sizeof(float32_t));
+    memcpy(fftRight, right, numSamples * sizeof(float32_t));
+
+    /* ----- 2. Forward FFTs (real → complex, interleaved) ----- */
+    arm_rfft_fast_f32(&rfft, fftLeft,  fftLeft,  0);
+    arm_rfft_fast_f32(&rfft, fftRight, fftRight, 0);
+
+    /* ----- 3. Cross-spectrum with PHAT weight --------------- */
+    for (uint32_t k = 0; k < Nby2; k += 2) {          // step over [Re,Im]
+        float32_t ReL = fftLeft [k];
+        float32_t ImL = fftLeft [k+1];
+        float32_t ReR = fftRight[k];
+        float32_t ImR = fftRight[k+1];
+
+        /* L*(f) · R(f)   (conjugate on left) */
+        float32_t ReX =  ReL * ReR + ImL * ImR;
+        float32_t ImX = -ImL * ReR + ReL * ImR;
+
+        /* PHAT normalisation  |X| → 1 */
+        float32_t mag2 = ReX*ReX + ImX*ImX + 1e-12f;
+        float32_t invMag = 1.0f / sqrtf(mag2);
+
+        fftCross[k]   = ReX * invMag;
+        fftCross[k+1] = ImX * invMag;
+    }
+
+    /* ----- 4. Inverse FFT → cross-correlation in time ------- */
+    arm_rfft_fast_f32(&rfft, fftCross, corrTime, 1);  // inverse flag = 1
+
+    /* ----- 5. Look for the peak in ±maxDelay --------------- */
+    int   bestLag = 0;
+    float bestVal = -1e30f;
+
+    for (int lag = -maxDelay; lag <= maxDelay; ++lag) {
+        /* Mapping: negative lags wrap to the end of corrTime[] */
+        uint32_t idx = (lag < 0) ? (N + lag) : lag;
+        float32_t v = corrTime[idx];
+
+        if (v > bestVal) { bestVal = v; bestLag = lag; }
+    }
+    return bestLag;
 }

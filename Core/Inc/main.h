@@ -75,6 +75,8 @@ void Error_Handler(void);
 #define TRIG_GPIO_Port GPIOA
 #define N_RES_Pin GPIO_PIN_12
 #define N_RES_GPIO_Port GPIOA
+#define TIM_MEAS_Pin GPIO_PIN_11
+#define TIM_MEAS_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
 

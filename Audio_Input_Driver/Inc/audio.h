@@ -37,7 +37,7 @@
 /*----- Function declarations -----------------------------------------------------*/
 void filterData(uint16_t *RawValues, int16_t *FilteredValues, uint16_t samplenumber, uint16_t Max_entry);
 void performFFT(float32_t *Result, float32_t *audiodata);
-void process_signal(double* amplitudes, int32_t* audioData_Left, int32_t* audioData_Right);
+void process_signal(double* amplitudes, int32_t* audioData_Left, int32_t* audioData_Right, float* fft_signal, float* WindowedSignal);
 float mean(float* signal, int startpoint, int endpoint);
 void sortvalues(double* amplitudes, float *meanValues, uint8_t direction, float scaleValue);
 void generateHammingWindow(void);
@@ -46,6 +46,11 @@ void applyWindow(int32_t *input, float32_t *output);
 float compute_energy(float32_t* signal, int size);
 int estimate_delay(const float* left, const float* right, int size, int max_delay);
 int beamform_direction(float* left, float* right, float *scaleValue);
+int estimate_delay_fast(const float32_t *left,
+                        const float32_t *right,
+                        int numSamples,
+                        int maxDelay);
+void delay_estimator_init(void);
 
 
 #endif /* AUDIO_H_ */
