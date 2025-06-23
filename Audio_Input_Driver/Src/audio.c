@@ -132,8 +132,25 @@ void process_signal(double* amplitudes, int32_t* audioData_Left, int32_t* audioD
 
 	for(int i=0; i<NUM_FREQ_BANDS; i++){
 		amplitudeMeans[i] = mean(fftSignal, freqbands[i], freqbands[i+1]);
+		float diff_upper = 0;
+		float diff_lower = 0;
+		if(i == 0){
+			diff_lower = 0;
+			int num = (freqbands[i] + freqbands[i+1]) / 2; // calculate half bandwidth
+			diff_upper = mean(fftSignal, freqbands[i+1] - num, freqbands[i+1] + num);
+		} else if (i== (NUM_FREQ_BANDS-1)){
+			diff_upper = 0;
+			int num = (freqbands[i-1] + freqbands[i]) / 2; // calculate half bandwidth
+			diff_lower = mean(fftSignal, freqbands[i] - num, freqbands[i] + num);
+		}
+		else {
+			int num_low = (freqbands[i-1] + freqbands[i]) / 2;
+			diff_lower = mean(fftSignal, freqbands[i] - num_low, freqbands[i] + num_low);
+			int num_upper = (freqbands[i] + freqbands[i+1]) / 2;
+			diff_upper = mean(fftSignal, freqbands[i+1] - num_upper, freqbands[i+1] + num_upper);
+		}
 		// add some magical scaling
-		amplitudeMeans[i] = amplitudeMeans[i]/2;
+		amplitudeMeans[i] = amplitudeMeans[i]/2 + (diff_upper + diff_lower)/4;
 	}
 
 	for(int i=0; i<NUM_SAMPLES; i++){

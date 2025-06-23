@@ -191,22 +191,19 @@ void init_drivers(void){
 		}
 
 		// Send a trigger to have waveform while measuring resonance period
-		// clear actual waveform with rising edge
+		// clear actual waveform with falling edge
 		HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, RESET);
 		HAL_Delay(1);
+		// Set new waveform with rising edge
 		HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, SET);
 		HAL_Delay(10);
-		// set new waveform with rising edge
-		HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, RESET);
-		HAL_Delay(1);
-		HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, SET);
 		reg = REG_LRA_RESONANCE_PERIOD;
 		HAL_I2C_Master_Transmit(&hi2c1, DEV_ADDRESS, &reg, 1, TIMEOUT);
 		if(HAL_I2C_Master_Receive(&hi2c1, DEV_ADDRESS, Buf, 1, TIMEOUT) == HAL_OK){
 			LRA_period = Buf[0];
 		}
 
-		// Set all actuators to 0V (Resolution test)
+		// Set all actuators to 0V
 		uint8_t send[2] = {REG_RATED_VOLTAGE, 0};
 		if(HAL_I2C_Master_Transmit(&hi2c1, DEV_ADDRESS, send, sizeof(send), TIMEOUT) == HAL_OK){
 			int a = 1;

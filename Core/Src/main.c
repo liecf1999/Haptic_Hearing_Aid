@@ -194,10 +194,12 @@ int main(void)
 		  // set new waveform
 		  HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, SET);
 		  ready = 0;
+		  HAL_GPIO_WritePin(TIM_MEAS_GPIO_Port, TIM_MEAS_Pin, RESET);
 	  }
 
 	  if(Data_Arrived_First_Half && (ready == 0)){
 		  Data_Arrived_First_Half = RESET;
+		  HAL_GPIO_WritePin(TIM_MEAS_GPIO_Port, TIM_MEAS_Pin, SET);
 		  // Create lock file to have no conflicts with matlab
 //		  FILE* lock = fopen("C:\\...\\Data_Left.lock", "w");
 //		  if (lock) fclose(lock);  // just create and close
@@ -215,8 +217,8 @@ int main(void)
 //		  fclose(fp);
 
 
-		  __disable_irq();
 		  process_signal(amplitudes, audioData_left, audioData_right, fftSignal, WindowedSignal);
+		  __disable_irq();
 		  set_amplitude(amplitudes);
 		  __enable_irq();
 //		  fp=fopen("C:\\Users\\franc\\OneDrive\\Dokumente\\MATLAB\\Master_Thesis\\Data_FFT.txt", "w");
@@ -242,6 +244,7 @@ int main(void)
 
 	  if(Data_Arrived_Second_Half && (ready==0)){
 		  Data_Arrived_Second_Half = RESET;
+		  HAL_GPIO_WritePin(TIM_MEAS_GPIO_Port, TIM_MEAS_Pin, SET);
 		  // Create lock file to have no conflicts with matlab
 //		  FILE* lock = fopen("C:\\...\\Data_Left.lock", "w");
 //		  if (lock) fclose(lock);  // just create and close
