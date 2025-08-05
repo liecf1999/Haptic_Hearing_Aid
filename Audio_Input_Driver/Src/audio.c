@@ -150,7 +150,7 @@ void process_signal(double* amplitudes, int32_t* audioData_Left, int32_t* audioD
 			diff_upper = mean(fftSignal, freqbands[i+1] - num_upper, freqbands[i+1] + num_upper);
 		}
 		// add some magical scaling
-		amplitudeMeans[i] = amplitudeMeans[i]/2 + (diff_upper + diff_lower)/4;
+		amplitudeMeans[i] = amplitudeMeans[i] + (diff_upper + diff_lower)/4;
 	}
 
 	for(int i=0; i<NUM_SAMPLES; i++){
