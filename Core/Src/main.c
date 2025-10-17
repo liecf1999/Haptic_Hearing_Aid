@@ -218,9 +218,7 @@ int main(void)
 
 
 		  process_signal(amplitudes, audioData_left, audioData_right, fftSignal, WindowedSignal);
-		  __disable_irq();
 		  set_amplitude(amplitudes);
-		  __enable_irq();
 //		  fp=fopen("C:\\Users\\franc\\OneDrive\\Dokumente\\MATLAB\\Master_Thesis\\Data_FFT.txt", "w");
 //		  for(int i=0; i<NUM_SAMPLES; i++){
 //			  int n= sprintf (p, "%d", (int) fftSignal[i]);
