@@ -261,9 +261,7 @@ int main(void)
 //		  fclose(fp);
 
 		  process_signal(amplitudes, audioData_left, audioData_right, fftSignal, WindowedSignal);
-		  __disable_irq();
 		  set_amplitude(amplitudes);
-		  __enable_irq();
 		  ready = 2;
 
 		  // Delete lock file as signal for "done writing"
