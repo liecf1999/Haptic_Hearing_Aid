@@ -23,6 +23,9 @@
 #define MAX_DELAY 64  // ~4ms max delay = 64 samples at 16kHz
 #define CORR_FFT_LEN (NUM_SAMPLES*2)   // power-of-two ≥ 2*NUM_SAMPLES
 
+#define NUM_STEPS 4
+#define WIDTH_OVERLAP 2 // scaling factor -> 2 = half the bandwidth, 3 = 1/3
+
 // Sample number boundaries of frequency bands
 #define FREQ_BAND_0 8 // 250Hz
 #define FREQ_BAND_1 13 // 406Hz (round up 377Hz)
@@ -134,23 +137,28 @@ void process_signal(double* amplitudes, int32_t* audioData_Left, int32_t* audioD
 		amplitudeMeans[i] = mean(fftSignal, freqbands[i], freqbands[i+1]);
 		float diff_upper = 0;
 		float diff_lower = 0;
-		if(i == 0){
-			diff_lower = 0;
-			int num = (freqbands[i] + freqbands[i+1]) / 2; // calculate half bandwidth
-			diff_upper = mean(fftSignal, freqbands[i+1] - num, freqbands[i+1] + num);
-		} else if (i== (NUM_FREQ_BANDS-1)){
-			diff_upper = 0;
-			int num = (freqbands[i-1] + freqbands[i]) / 2; // calculate half bandwidth
-			diff_lower = mean(fftSignal, freqbands[i] - num, freqbands[i] + num);
+		int num_low = (freqbands[i] - freqbands[i-1]) / (WIDTH_OVERLAP*NUM_STEPS);
+		int num_upper = (freqbands[i+1] - freqbands[i]) / (WIDTH_OVERLAP*NUM_STEPS);
+
+
+		for(int j = 0; j<NUM_STEPS; j++){
+			// only compute upper overlap
+			if(i == 0){
+				diff_upper += mean(fftSignal, freqbands[i+1] + j*num_upper, freqbands[i+1] + (j+1)*num_upper);
+			} // only compute lower overlap
+			else if (i== (NUM_FREQ_BANDS-1)){
+				int num = (freqbands[i] - freqbands[i-1]) / (WIDTH_OVERLAP*NUM_STEPS); // calculate bandwidth
+				diff_lower += mean(fftSignal, freqbands[i] - (j+1)*num_low, freqbands[i] -j*num_low);
+			}
+			// compute both sides
+			else {
+				diff_lower += mean(fftSignal, freqbands[i] - (j+1)*num_low, freqbands[i] -j*num_low);
+				diff_upper += mean(fftSignal, freqbands[i+1] + j*num_upper, freqbands[i+1] + (j+1)*num_upper);
+			}
 		}
-		else {
-			int num_low = (freqbands[i-1] + freqbands[i]) / 2;
-			diff_lower = mean(fftSignal, freqbands[i] - num_low, freqbands[i] + num_low);
-			int num_upper = (freqbands[i] + freqbands[i+1]) / 2;
-			diff_upper = mean(fftSignal, freqbands[i+1] - num_upper, freqbands[i+1] + num_upper);
-		}
-		// add some magical scaling
-		amplitudeMeans[i] = amplitudeMeans[i] + (diff_upper + diff_lower)/4;
+
+		//scaling
+		amplitudeMeans[i] = amplitudeMeans[i] + (diff_upper + diff_lower)/NUM_STEPS;
 	}
 
 	for(int i=0; i<NUM_SAMPLES; i++){
