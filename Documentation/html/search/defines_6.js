@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['f32_5fabsmax_0',['F32_ABSMAX',['../arm__math__types_8h.html#ad997d60e69e9116cb7714d14f7442c73',1,'arm_math_types.h']]],
+  ['f32_5fabsmin_1',['F32_ABSMIN',['../arm__math__types_8h.html#a30173fccebc0c990bd9d4ee7a864cade',1,'arm_math_types.h']]],
+  ['f32_5fmax_2',['F32_MAX',['../arm__math__types_8h.html#a754d8f564bd5d1fb49931b2f4c0ec00c',1,'arm_math_types.h']]],
+  ['f32_5fmin_3',['F32_MIN',['../arm__math__types_8h.html#a0f9ce95191fb035fcd53ab63b9663e20',1,'arm_math_types.h']]],
+  ['f64_5fabsmax_4',['F64_ABSMAX',['../arm__math__types_8h.html#a165289cdbeeb4f5903df34d70489ab19',1,'arm_math_types.h']]],
+  ['f64_5fabsmin_5',['F64_ABSMIN',['../arm__math__types_8h.html#a07c00c6b967495f5e56dc989d859c3db',1,'arm_math_types.h']]],
+  ['f64_5fmax_6',['F64_MAX',['../arm__math__types_8h.html#a82daf28d8d0052302ccf95c163687ce5',1,'arm_math_types.h']]],
+  ['f64_5fmin_7',['F64_MIN',['../arm__math__types_8h.html#a4ef26fd77745fadb40f370d63943d5eb',1,'arm_math_types.h']]],
+  ['fast_5fmath_5fq15_5fshift_8',['FAST_MATH_Q15_SHIFT',['../fast__math__functions_8h.html#a34716b73c631e65e8dd855e08384ecb2',1,'fast_math_functions.h']]],
+  ['fast_5fmath_5fq31_5fshift_9',['FAST_MATH_Q31_SHIFT',['../fast__math__functions_8h.html#a4268f77b1811a0c7fc2532a0bf6108b0',1,'fast_math_functions.h']]],
+  ['fast_5fmath_5ftable_5fsize_10',['FAST_MATH_TABLE_SIZE',['../fast__math__functions_8h.html#afcb9147c96853bea484cfc2dde07463d',1,'fast_math_functions.h']]],
+  ['fb_5fbrake_5ffactor_11',['FB_BRAKE_FACTOR',['../_d_r_v2506_8h.html#a583de44d46ac36cdb5e253b572d875c9',1,'DRV2506.h']]],
+  ['fft_5fsize_12',['FFT_SIZE',['../audio_8c.html#a636ddc19af00bc87969a07c88331f105',1,'audio.c']]],
+  ['freq_5fband_5f0_13',['FREQ_BAND_0',['../audio_8c.html#a380bb0c99b98049f85b2983e2ee9a475',1,'audio.c']]],
+  ['freq_5fband_5f1_14',['FREQ_BAND_1',['../audio_8c.html#af0fee475876de19b67058ac10f3f0fa2',1,'audio.c']]],
+  ['freq_5fband_5f2_15',['FREQ_BAND_2',['../audio_8c.html#acb13887d2984c330a92a5b680340cdd8',1,'audio.c']]],
+  ['freq_5fband_5f3_16',['FREQ_BAND_3',['../audio_8c.html#a7368af1ec7e88446e04f8a6b517b2ef4',1,'audio.c']]],
+  ['freq_5fband_5f4_17',['FREQ_BAND_4',['../audio_8c.html#aa60a541688048148d119717bb1cf6f42',1,'audio.c']]],
+  ['freq_5fband_5f5_18',['FREQ_BAND_5',['../audio_8c.html#ab48e79f4e03cc88b058421590e372040',1,'audio.c']]],
+  ['freq_5fband_5f6_19',['FREQ_BAND_6',['../audio_8c.html#a1d1ddd02bc31ccfd1e109803f7240712',1,'audio.c']]],
+  ['freq_5fband_5f7_20',['FREQ_BAND_7',['../audio_8c.html#a74897c2803075912db4d8ba3d27c422e',1,'audio.c']]],
+  ['freq_5fband_5f8_21',['FREQ_BAND_8',['../audio_8c.html#a6403e6492d4935962d80fd74827c8eb6',1,'audio.c']]]
+];

@@ -1,0 +1,27 @@
+var controller__functions_8h =
+[
+    [ "arm_pid_instance_q15", "structarm__pid__instance__q15.html", "structarm__pid__instance__q15" ],
+    [ "arm_pid_instance_q31", "structarm__pid__instance__q31.html", "structarm__pid__instance__q31" ],
+    [ "arm_pid_instance_f32", "structarm__pid__instance__f32.html", "structarm__pid__instance__f32" ],
+    [ "CONTROLLER_Q31_SHIFT", "controller__functions_8h.html#aaff6d2358c4ada8de838a279254ab550", null ],
+    [ "INPUT_SPACING", "controller__functions_8h.html#a1339e9abc11a3870e0c04f822a62166a", null ],
+    [ "arm_clarke_f32", "group__clarke.html#ga82d40c62bb48ef4d613f1f2f685b4084", null ],
+    [ "arm_clarke_q31", "group__clarke.html#ga8d68db2a6e26e1caab677f5ab293c068", null ],
+    [ "arm_inv_clarke_f32", "group__inv__clarke.html#ga1a73ce96f94b2124d02426690e587197", null ],
+    [ "arm_inv_clarke_q31", "group__inv__clarke.html#ga3bab178431f22d13332a0dfae4390172", null ],
+    [ "arm_inv_park_f32", "group__inv__park.html#ga896b639ecd52c33d427bc7cdc8d303b2", null ],
+    [ "arm_inv_park_q31", "group__inv__park.html#gae7165779ef72e1f797d0c601d6d619b2", null ],
+    [ "arm_park_f32", "group__park.html#ga18f92d09e080edc98a00c01886b56b5d", null ],
+    [ "arm_park_q31", "group__park.html#ga69be76685149b18f345f705aa8efaad0", null ],
+    [ "arm_pid_f32", "group___p_i_d.html#ga5a6865ed706b7dd969ef0bd58a61f306", null ],
+    [ "arm_pid_init_f32", "controller__functions_8h.html#ae31536b19b82b93ed184fb1ab73cfcb3", null ],
+    [ "arm_pid_init_q15", "controller__functions_8h.html#a2cb1e3d3ebb167348fdabec74653d5c3", null ],
+    [ "arm_pid_init_q31", "controller__functions_8h.html#ad9d88485234fa9460b1ce9e64989ac86", null ],
+    [ "arm_pid_q15", "group___p_i_d.html#ga7ecc87208cb297fb9a31cec4f18bb54e", null ],
+    [ "arm_pid_q31", "group___p_i_d.html#ga9ead8b3180125fb42879389477b99dc8", null ],
+    [ "arm_pid_reset_f32", "controller__functions_8h.html#a9ec860bcb6f8ca31205bf0f1b51ab723", null ],
+    [ "arm_pid_reset_q15", "controller__functions_8h.html#a408566dacb4fa6e0458b2c75672e525f", null ],
+    [ "arm_pid_reset_q31", "controller__functions_8h.html#aeecbacd3fb37c608ec25474d3a0dffa9", null ],
+    [ "arm_sin_cos_f32", "group___sin_cos.html#ga4420d45c37d58c310ef9ae1b5fe58020", null ],
+    [ "arm_sin_cos_q31", "group___sin_cos.html#gae9e4ddebff9d4eb5d0a093e28e0bc504", null ]
+];

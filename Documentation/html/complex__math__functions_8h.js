@@ -1,0 +1,25 @@
+var complex__math__functions_8h =
+[
+    [ "arm_cmplx_conj_f32", "complex__math__functions_8h.html#a1b5571244b051bb72db30886896da2da", null ],
+    [ "arm_cmplx_conj_q15", "complex__math__functions_8h.html#a2eef7dba99852d5f7ec3e025b2e5653b", null ],
+    [ "arm_cmplx_conj_q31", "complex__math__functions_8h.html#a652edf2688aae9b2f53c5da73f6cc2bc", null ],
+    [ "arm_cmplx_dot_prod_f32", "complex__math__functions_8h.html#a93796e73f02771cf6fe13de016e296ed", null ],
+    [ "arm_cmplx_dot_prod_q15", "complex__math__functions_8h.html#ae712971379c461cfb8bef7e423bf8417", null ],
+    [ "arm_cmplx_dot_prod_q31", "complex__math__functions_8h.html#aa90661b5eee3b6d83a149043ada0eb37", null ],
+    [ "arm_cmplx_mag_f32", "complex__math__functions_8h.html#aba4e0eff7816fe80d01121fb4cf6c6bc", null ],
+    [ "arm_cmplx_mag_f64", "complex__math__functions_8h.html#ab0f9ab96e73faa91948dc0001fe7eae6", null ],
+    [ "arm_cmplx_mag_fast_q15", "complex__math__functions_8h.html#a7a5add6dc996af3717a7a0b79f4a1fdb", null ],
+    [ "arm_cmplx_mag_q15", "complex__math__functions_8h.html#a0488e185f4631ac029b02f1759b287cf", null ],
+    [ "arm_cmplx_mag_q31", "complex__math__functions_8h.html#ab69ad9237469565958cce6b4555bbb6e", null ],
+    [ "arm_cmplx_mag_squared_f32", "complex__math__functions_8h.html#a925ef5458a384f63d06f1c6997d1fb7d", null ],
+    [ "arm_cmplx_mag_squared_f64", "complex__math__functions_8h.html#adf908e98be7417c5ad91050e60fd3ad4", null ],
+    [ "arm_cmplx_mag_squared_q15", "complex__math__functions_8h.html#afdd1e838db0aef7ec201611883bd444c", null ],
+    [ "arm_cmplx_mag_squared_q31", "complex__math__functions_8h.html#a9d74dbc0a777cfcc75c1cae33ef4d44a", null ],
+    [ "arm_cmplx_mult_cmplx_f32", "complex__math__functions_8h.html#ae221504b01e4abfe5f335eafd801b4ed", null ],
+    [ "arm_cmplx_mult_cmplx_f64", "complex__math__functions_8h.html#a0db9aa8b946f424f75a24662357d02ff", null ],
+    [ "arm_cmplx_mult_cmplx_q15", "complex__math__functions_8h.html#a683b32a91cffbf021f58ace5a62904e8", null ],
+    [ "arm_cmplx_mult_cmplx_q31", "complex__math__functions_8h.html#a7748c92e0922cf14e3d7bb257d77593f", null ],
+    [ "arm_cmplx_mult_real_f32", "complex__math__functions_8h.html#a903eb30a02343574e46cb123b52232f4", null ],
+    [ "arm_cmplx_mult_real_q15", "complex__math__functions_8h.html#aa41d60a567652bf6a783b916931bf20b", null ],
+    [ "arm_cmplx_mult_real_q31", "complex__math__functions_8h.html#a0fe1cd71d35b4481f8ab69d502c96ace", null ]
+];

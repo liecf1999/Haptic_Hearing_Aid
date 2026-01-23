@@ -1,0 +1,45 @@
+var support__functions_8h =
+[
+    [ "arm_sort_instance_f32", "structarm__sort__instance__f32.html", "structarm__sort__instance__f32" ],
+    [ "arm_merge_sort_instance_f32", "structarm__merge__sort__instance__f32.html", "structarm__merge__sort__instance__f32" ],
+    [ "arm_sort_alg", "support__functions_8h.html#a39c7478f2a29c3ac0a8008ca916c811e", [
+      [ "ARM_SORT_BITONIC", "support__functions_8h.html#a39c7478f2a29c3ac0a8008ca916c811eaab0ec90f91814313b3329044cd0bc199", null ],
+      [ "ARM_SORT_BUBBLE", "support__functions_8h.html#a39c7478f2a29c3ac0a8008ca916c811ea10847ade0558f24d994781e0ad1f62c3", null ],
+      [ "ARM_SORT_HEAP", "support__functions_8h.html#a39c7478f2a29c3ac0a8008ca916c811ea950755a218539f9285e818d016a7a482", null ],
+      [ "ARM_SORT_INSERTION", "support__functions_8h.html#a39c7478f2a29c3ac0a8008ca916c811eaf8e9893e2d6c20f7e974bf5b6124504e", null ],
+      [ "ARM_SORT_QUICK", "support__functions_8h.html#a39c7478f2a29c3ac0a8008ca916c811ea5cfbedde2d98671c9ba9d0118019691c", null ],
+      [ "ARM_SORT_SELECTION", "support__functions_8h.html#a39c7478f2a29c3ac0a8008ca916c811eaf0f7ed7af0b072cf7e490f0738b60cd2", null ]
+    ] ],
+    [ "arm_sort_dir", "support__functions_8h.html#a171bff70e8bc15590ef1df0457093d78", [
+      [ "ARM_SORT_DESCENDING", "support__functions_8h.html#a171bff70e8bc15590ef1df0457093d78a850e046554779cc1a8727851706905b2", null ],
+      [ "ARM_SORT_ASCENDING", "support__functions_8h.html#a171bff70e8bc15590ef1df0457093d78a8ade46370b58121372c949ab1cbdbe63", null ]
+    ] ],
+    [ "arm_barycenter_f32", "support__functions_8h.html#a28b8540898eb8880fb283f97079abd17", null ],
+    [ "arm_copy_f32", "support__functions_8h.html#aa6dfe9554ca61eb3d1eee498396bce88", null ],
+    [ "arm_copy_f64", "support__functions_8h.html#a5b800dc81ba021bc1fd09f6635ca7074", null ],
+    [ "arm_copy_q15", "support__functions_8h.html#aeb9e8c16ec7fe1235e5610142400f15f", null ],
+    [ "arm_copy_q31", "support__functions_8h.html#a94c51fe2e82560ade3803787309c1282", null ],
+    [ "arm_copy_q7", "support__functions_8h.html#a9b947e38172ae7e5de780bed13a404fe", null ],
+    [ "arm_fill_f32", "support__functions_8h.html#a2248e8d3901b4afb7827163132baad94", null ],
+    [ "arm_fill_f64", "support__functions_8h.html#a5d5d1f8aca80792eaf1db0765220fe2d", null ],
+    [ "arm_fill_q15", "support__functions_8h.html#a76b21c32a3783a2b3334d930a646e5d8", null ],
+    [ "arm_fill_q31", "support__functions_8h.html#a69cc781cf337bd0a31bb85c772a35f7f", null ],
+    [ "arm_fill_q7", "support__functions_8h.html#a0465cf326ada039ed792f94b033d9ec5", null ],
+    [ "arm_float_to_q15", "support__functions_8h.html#ac7696e64963e5051ebb950c88c6ba186", null ],
+    [ "arm_float_to_q31", "support__functions_8h.html#aae21be47db707e79552f3e8221a48fb0", null ],
+    [ "arm_float_to_q7", "support__functions_8h.html#a63b7cef42a242f0be43376ba3380988d", null ],
+    [ "arm_merge_sort_f32", "support__functions_8h.html#aaf7f4a37e178f324a43a3b0257217c50", null ],
+    [ "arm_merge_sort_init_f32", "support__functions_8h.html#a8132fc5cd4ff0d49a18d8620b7b994ab", null ],
+    [ "arm_q15_to_float", "support__functions_8h.html#a5a75381e7d63ea3a3a315344615281cf", null ],
+    [ "arm_q15_to_q31", "support__functions_8h.html#a39647b2109a5c64a067b776302c4a083", null ],
+    [ "arm_q15_to_q7", "support__functions_8h.html#a837ce281d0e2d5fc445c48334307db19", null ],
+    [ "arm_q31_to_float", "support__functions_8h.html#a19a9d023aca1f99abd5da6f13a42b6cf", null ],
+    [ "arm_q31_to_q15", "support__functions_8h.html#a775f3a1996f00a8048c4b7acba2e0828", null ],
+    [ "arm_q31_to_q7", "support__functions_8h.html#abef5357eb3348b3b5b38915fffce8f3d", null ],
+    [ "arm_q7_to_float", "support__functions_8h.html#a840d8a0e8499d02a54f459bb29f5d63c", null ],
+    [ "arm_q7_to_q15", "support__functions_8h.html#a1023c3832ca6be3a6d17ef338cafa28b", null ],
+    [ "arm_q7_to_q31", "support__functions_8h.html#a3c73bfb98fc5a1b4f612264662d0549c", null ],
+    [ "arm_sort_f32", "support__functions_8h.html#a2297c149f0974e0f5510907725addd4b", null ],
+    [ "arm_sort_init_f32", "support__functions_8h.html#ac268276b8facce924812fe0e57fa4043", null ],
+    [ "arm_weighted_sum_f32", "support__functions_8h.html#affef5e0e3e1d0289e419c23853e20850", null ]
+];

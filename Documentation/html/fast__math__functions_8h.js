@@ -1,0 +1,27 @@
+var fast__math__functions_8h =
+[
+    [ "FAST_MATH_Q15_SHIFT", "fast__math__functions_8h.html#a34716b73c631e65e8dd855e08384ecb2", null ],
+    [ "FAST_MATH_Q31_SHIFT", "fast__math__functions_8h.html#a4268f77b1811a0c7fc2532a0bf6108b0", null ],
+    [ "FAST_MATH_TABLE_SIZE", "fast__math__functions_8h.html#afcb9147c96853bea484cfc2dde07463d", null ],
+    [ "PI", "fast__math__functions_8h.html#a598a3330b3c21701223ee0ca14316eca", null ],
+    [ "arm_atan2_f32", "fast__math__functions_8h.html#aa7fbd2bb45df78860dd3a0293391096f", null ],
+    [ "arm_atan2_q15", "fast__math__functions_8h.html#a9d424b6eaf16bfc41be3e88335cfb801", null ],
+    [ "arm_atan2_q31", "fast__math__functions_8h.html#a14e753643307e373abffa6d14ae7a3f3", null ],
+    [ "arm_cos_f32", "group__cos.html#gace15287f9c64b9b4084d1c797d4c49d8", null ],
+    [ "arm_cos_q15", "group__cos.html#gadfd60c24def501638c0d5db20f4c869b", null ],
+    [ "arm_cos_q31", "group__cos.html#gad80f121949ef885a77d83ab36e002567", null ],
+    [ "arm_divide_q15", "fast__math__functions_8h.html#a3d5bc8179cdfb12288d58d99d635e4cb", null ],
+    [ "arm_divide_q31", "fast__math__functions_8h.html#a250c0a49bd2e42282f3296d51138a5cb", null ],
+    [ "arm_sin_f32", "group__sin.html#gae164899c4a3fc0e946dc5d55555fe541", null ],
+    [ "arm_sin_q15", "group__sin.html#ga1fc6d6640be6cfa688a8bea0a48397ee", null ],
+    [ "arm_sin_q31", "group__sin.html#ga57aade7d8892585992cdc6375bd82f9c", null ],
+    [ "arm_sqrt_f32", "group___s_q_r_t.html#gaa37d8b017ef0c8d356dc98fd78e2d96b", null ],
+    [ "arm_sqrt_q15", "group___s_q_r_t.html#ga5abe5ca724f3e15849662b03752c1238", null ],
+    [ "arm_sqrt_q31", "group___s_q_r_t.html#ga119e25831e141d734d7ef10636670058", null ],
+    [ "arm_vexp_f32", "fast__math__functions_8h.html#aa2b569a40e82e69917f9560774f75a91", null ],
+    [ "arm_vexp_f64", "fast__math__functions_8h.html#ac5c79a10b36e8a1f2fcaf23b9497e1b2", null ],
+    [ "arm_vlog_f32", "fast__math__functions_8h.html#a1a97d95af11d143b26334c8ff278443e", null ],
+    [ "arm_vlog_f64", "fast__math__functions_8h.html#ab6ba4e6a3d382ac68744e4726a220fad", null ],
+    [ "arm_vlog_q15", "fast__math__functions_8h.html#a6773e6b0b5448e0e409931b4119271dc", null ],
+    [ "arm_vlog_q31", "fast__math__functions_8h.html#a35aac80d9cfc0b7b08382da2117772d1", null ]
+];

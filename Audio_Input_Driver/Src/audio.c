@@ -144,21 +144,21 @@ void process_signal(double* amplitudes, int32_t* audioData_Left, int32_t* audioD
 		for(int j = 0; j<NUM_STEPS; j++){
 			// only compute upper overlap
 			if(i == 0){
-				diff_upper += mean(fftSignal, freqbands[i+1] + j*num_upper, freqbands[i+1] + (j+1)*num_upper);
+				diff_upper += mean(fftSignal, freqbands[i+1] + j*num_upper, freqbands[i+1] + (j+1)*num_upper) / (j+2);
 			} // only compute lower overlap
 			else if (i== (NUM_FREQ_BANDS-1)){
 				int num = (freqbands[i] - freqbands[i-1]) / (WIDTH_OVERLAP*NUM_STEPS); // calculate bandwidth
-				diff_lower += mean(fftSignal, freqbands[i] - (j+1)*num_low, freqbands[i] -j*num_low);
+				diff_lower += mean(fftSignal, freqbands[i] - (j+1)*num_low, freqbands[i] -j*num_low) / (j+2);
 			}
 			// compute both sides
 			else {
-				diff_lower += mean(fftSignal, freqbands[i] - (j+1)*num_low, freqbands[i] -j*num_low);
-				diff_upper += mean(fftSignal, freqbands[i+1] + j*num_upper, freqbands[i+1] + (j+1)*num_upper);
+				diff_lower += mean(fftSignal, freqbands[i] - (j+1)*num_low, freqbands[i] -j*num_low) / (j+2);
+				diff_upper += mean(fftSignal, freqbands[i+1] + j*num_upper, freqbands[i+1] + (j+1)*num_upper) / (j+2);
 			}
 		}
 
 		//scaling
-		amplitudeMeans[i] = amplitudeMeans[i] + (diff_upper + diff_lower)/NUM_STEPS;
+		amplitudeMeans[i] = amplitudeMeans[i] + (diff_upper + diff_lower);
 	}
 
 	for(int i=0; i<NUM_SAMPLES; i++){
@@ -239,7 +239,7 @@ void sortvalues(double* amplitudes, float *meanValues, uint8_t direction, float 
  *
  * @return		void
  *
- * @details		Function that generates a hamming window to apply on the signal (written by ChatGPT).
+ * @details		Function that generates a hamming window to apply on the signal.
  *
  * @author		Francis Liechti (FL)
  * @date		03.06.2025	FL	Created
@@ -258,7 +258,7 @@ void generateHammingWindow(void) {
  *
  * @return		void
  *
- * @details		Function that generates a hanning window to apply on the signal (written by ChatGPT, adapted).
+ * @details		Function that generates a hanning window to apply on the signal.
  *
  * @author		Francis Liechti (FL)
  * @date		03.06.2025	FL	Created
@@ -279,7 +279,7 @@ void generateHannWindow(void) {
  *
  * @return		void
  *
- * @details		Function that applies window on the signal (written by ChatGPT).
+ * @details		Function that applies window on the signal.
  *
  * @author		Francis Liechti (FL)
  * @date		03.06.2025	FL	Created
@@ -301,7 +301,7 @@ void applyWindow(int32_t *input, float32_t *output) {
  *
  * @return		float energy
  *
- * @details		Function that calculates energy of a signal (written by ChatGPT).
+ * @details		Function that calculates energy of a signal.
  *
  * @author		Francis Liechti (FL)
  * @date		04.06.2025	FL	Created
@@ -328,7 +328,7 @@ float compute_energy(float32_t* signal, int size) {
  *
  * @return		int delay
  *
- * @details		Function that estimates delay of two signals based on cross-correlation (written by ChatGPT).
+ * @details		Function that estimates delay of two signals based on cross-correlation.
  *
  * @author		Francis Liechti (FL)
  * @date		04.06.2025	FL	Created
@@ -367,7 +367,7 @@ int estimate_delay(const float* left, const float* right, int size, int max_dela
  *
  * @return		int direction
  *
- * @details		Function that estimates delay of two signals based on cross-correlation (written by ChatGPT but adapted).
+ * @details		Function that estimates delay of two signals based on cross-correlation.
  * 				Beamforming decision: returns +1 for left, -1 for right
  * 				returns the scaleValue on the other hand
  *

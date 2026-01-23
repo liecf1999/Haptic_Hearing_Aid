@@ -1,0 +1,25 @@
+var distance__functions_8h =
+[
+    [ "arm_braycurtis_distance_f32", "distance__functions_8h.html#a6e3bec4b346efa100c4f2ca26ed7a142", null ],
+    [ "arm_canberra_distance_f32", "distance__functions_8h.html#a4cb969f4c0c64a9afda98b2ed13e95fa", null ],
+    [ "arm_chebyshev_distance_f32", "distance__functions_8h.html#aeac7e25faa01178ba6de05be8e1a31e9", null ],
+    [ "arm_chebyshev_distance_f64", "distance__functions_8h.html#a47f287c9b4ba01fde36fd2480854646b", null ],
+    [ "arm_cityblock_distance_f32", "distance__functions_8h.html#a0a7194c6d56ce679a6ba1d5ebc814d5c", null ],
+    [ "arm_cityblock_distance_f64", "distance__functions_8h.html#aa579d814b40db8c118b6a212018a4d9c", null ],
+    [ "arm_correlation_distance_f32", "distance__functions_8h.html#af51cef11ade667912bb004cb24dc4e39", null ],
+    [ "arm_cosine_distance_f32", "distance__functions_8h.html#a376f5fccfe6ddba6ed7121bc1cec7f70", null ],
+    [ "arm_cosine_distance_f64", "distance__functions_8h.html#a0f00ad1993b20b2928107e6a8fc4e2ef", null ],
+    [ "arm_dice_distance", "distance__functions_8h.html#ac95c8fbb4848b18c3641b77d3ba46b50", null ],
+    [ "arm_euclidean_distance_f32", "distance__functions_8h.html#a838f0a157454dfd95996691309c3828e", null ],
+    [ "arm_euclidean_distance_f64", "distance__functions_8h.html#adbf80625e1d37bd92c5079b78a18084d", null ],
+    [ "arm_hamming_distance", "distance__functions_8h.html#a408dd9df42fb1f3f5ec7ca8d80694d4a", null ],
+    [ "arm_jaccard_distance", "distance__functions_8h.html#a21f2dd35d8961096948694fe9c62b5a5", null ],
+    [ "arm_jensenshannon_distance_f32", "distance__functions_8h.html#a6965b12ce3ee265d3759dfec38b77524", null ],
+    [ "arm_kulsinski_distance", "distance__functions_8h.html#a0e3c6e77710f97d96f22ca7f50f3a42e", null ],
+    [ "arm_minkowski_distance_f32", "distance__functions_8h.html#adee2e217acf8a2e28f6cc0d1668e4902", null ],
+    [ "arm_rogerstanimoto_distance", "distance__functions_8h.html#afc18d71e2a85fe37b97103e8a604c15f", null ],
+    [ "arm_russellrao_distance", "distance__functions_8h.html#ad53bfa83ebfe63852e6a065d87d02881", null ],
+    [ "arm_sokalmichener_distance", "distance__functions_8h.html#a6147a66a07ffa17bbcfd21cc54d64a05", null ],
+    [ "arm_sokalsneath_distance", "distance__functions_8h.html#a01397cb86376c82c4a2016d1a371fdce", null ],
+    [ "arm_yule_distance", "distance__functions_8h.html#adf19a7f20bde43c32fd7a62c775a01ac", null ]
+];
